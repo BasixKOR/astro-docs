@@ -1,5 +1,5 @@
 ---
-title: Scripts and Event Handling
+title: Scripts and event handling
 description: >-
   How to add client-side interactivity to Astro components using native browser
   JavaScript APIs.
@@ -7,7 +7,7 @@ i18nReady: true
 ---
 import ReadMore from '~/components/ReadMore.astro'
 
-You can add interactivity to your Astro components without [using a UI framework](/en/core-concepts/framework-components/) like React, Svelte, Vue, etc. using standard HTML `<script>` tags. This allows you to send JavaScript to run in the browser and add functionality to your Astro components.
+You can add interactivity to your Astro components without [using a UI framework](/en/guides/framework-components/) like React, Svelte, Vue, etc. using standard HTML `<script>` tags. This allows you to send JavaScript to run in the browser and add functionality to your Astro components.
 
 ## Client-Side Scripts
 
@@ -52,7 +52,7 @@ In this example, adding the `<Hello />` component to a page will log a message t
 By default, `<script>` tags are processed by Astro.
 
 - Any imports will be bundled, allowing you to import local files or Node modules.
-- The processed script will be injected into your page’s `<head>` with [`type="module"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
+- The processed script will be injected at where it's declared with [`type="module"`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
 - TypeScript is fully supported, including importing TypeScript files.
 - If your component is used several times on a page, the script will only be included once.
 
@@ -91,7 +91,7 @@ Astro will not process your script tags in some situations. In particular, addin
 <ReadMore>See our [directives reference](/en/reference/directives-reference/#script--style-directives) page for more information about the directives available on `<script>` tags.</ReadMore>
 
 
-### Include javascript files on your page
+### Include JavaScript files on your page
 
 You may want to write your scripts as separate `.js`/`.ts` files or need to reference an external script on another server. You can do this by referencing these in a `<script>` tag’s `src` attribute.
 
@@ -166,8 +166,7 @@ In this example, we define a new `<astro-heart>` HTML element that tracks how ma
 <script>
   // Define the behaviour for our new type of HTML element.
   class AstroHeart extends HTMLElement {
-    constructor() {
-			super();
+    connectedCallback() {
       let count = 0;
 
       const heartButton = this.querySelector('button');
@@ -197,7 +196,7 @@ There are two advantages to using a custom element here:
 
 ### Pass frontmatter variables to scripts
 
-In Astro components, the code in [the frontmatter](/en/core-concepts/astro-components/#the-component-script) between the `---` fences runs on the server and is not available in the browser. To send variables from the server to the client, we need a way to store our variables and then read them when JavaScript runs in the browser.
+In Astro components, the code in [the frontmatter](/en/basics/astro-components/#the-component-script) between the `---` fences runs on the server and is not available in the browser. To send variables from the server to the client, we need a way to store our variables and then read them when JavaScript runs in the browser.
 
 One way to do this is to use [`data-*` attributes](https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes) to store the value of variables in your HTML output. Scripts, including custom elements, can then read these attributes using an element’s `dataset` property once your HTML loads in the browser.
 
@@ -215,9 +214,7 @@ const { message = 'Welcome, world!' } = Astro.props;
 
 <script>
   class AstroGreet extends HTMLElement {
-    constructor() {
-			super();
-
+    connectedCallback() {
       // Read the message from the data attribute.
       const message = this.dataset.message;
       const button = this.querySelector('button');
@@ -249,3 +246,7 @@ import AstroGreet from '../components/AstroGreet.astro';
 :::tip[Did you know?]
 This is actually what Astro does behind the scenes when you pass props to a component written using a UI framework like React! For components with a `client:*` directive, Astro creates an `<astro-island>` custom element with a `props` attribute that stores your server-side props in the HTML output.
 :::
+
+### Combining scripts and UI Frameworks
+
+Elements rendered by a UI framework may not be available yet when a `<script>` tag executes. If your script also needs to handle [UI framework components](/en/guides/framework-components/), using a custom element is recommended.

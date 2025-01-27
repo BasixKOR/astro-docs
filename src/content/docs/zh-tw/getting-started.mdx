@@ -1,123 +1,67 @@
 ---
 title: 新手上路
-description: 簡單介紹 Astro。
+description: 幫助你使用 Astro——為內容導向網站設計的網頁框架——進行開發的指南、資源和 API 參考。
 i18nReady: true
+tableOfContents: false
+editUrl: false
+next: false
+banner:
+  content: |
+    Astro v5 出了！<a href="/zh-tw/guides/upgrade-to/v5/">學習如何升級你的網站</a>
+hero:
+  title: Astro 文件
+  tagline: 提供指南、資源和 API 參考，協助你使用 Astro 開發。
+  actions:
+    - text: 新手上路
+      icon: rocket
+      link: /zh-tw/install-and-setup/
+    - text: 瞭解 Astro 的特色
+      icon: right-arrow
+      variant: minimal
+      link: /zh-tw/concepts/why-astro/
+  facepile:
+    tagline: 由 Astro 和開源貢獻者共同出品。
+    linkText: 加入我們！
+    link: /zh-tw/contribute/
 ---
-import Button from '~/components/Button.astro'
-import TranslatorList from '~/components/TranslatorList.astro'
-import ContributorList from '~/components/ContributorList.astro'
-import PackageManagerTabs from '~/components/tabs/PackageManagerTabs.astro'
 
-:::tip[Astro 3.0 現已發布！]
-**Astro v3 有甚麼新功能？** [在公告文章中了解詳情](https://astro.build/blog/astro-3/)。  
-**準備好升級了？** [請按照我們的升級指南](/zh-tw/guides/upgrade-to/v3/)。
-:::
+import { CardGrid } from '@astrojs/starlight/components'
+import Card from '~/components/Landing/Card.astro'
+import ListCard from '~/components/Landing/ListCard.astro'
+import SplitCard from '~/components/Landing/SplitCard.astro'
+import Discord from '~/components/Landing/Discord.astro'
 
-<h2>甚麼是 Astro？</h2>
+<CardGrid>
+  <Card title="你要用 Astro 打造甚麼？" icon="laptop">
+    探索 [Astro 起始佈景主題](https://astro.build/themes/)。部落格、作品集、文件、登陸頁面、SaaS、行銷、電商網站⋯⋯應有盡有！
+  </Card>
 
-Astro 是個**多合一**的**網頁框架**，用於打造**快速**且**以內容為中心**的網站。
+  <Card title="教學導覽" icon="star">
+    從[建立部落格](/zh-tw/tutorial/0-introduction/)教學中學習基礎知識，建立你的第一個 Astro 網站。
+  </Card>
 
+  <SplitCard title="開始你的第一個專案" icon="rocket">
+    ```sh
+    # 以 npm 建立新專案
+    npm create astro@latest
+    ```
 
-## 主要特色
-- **組件群島：** 用於構建快速網站的新網頁架構。
-- **伺服器優先的 API 設計：** 從使用者的設備上去除高開銷的水合過程。
-- **預設零 JS：** 沒有 JavaScript 執行階段開銷來拖慢你的速度。
-- **邊緣就緒：** 在任何地方部署，甚至像 Deno 或 Cloudflare 這樣的全球邊緣執行階段。
-- **可自訂：** Tailwind、MDX 和其他 100 多個整合可供選擇。
-- **不依賴 UI：** 支援 React、Preact、Svelte、Vue、Solid 和 Lit 等。
+    [安裝指南](/zh-tw/install-and-setup/)提供詳細步驟，教你如何透過 CLI 精靈安裝 Astro、從現有 Astro GitHub 倉儲新增專案，以及手動安裝 Astro。
+  </SplitCard>
 
-查看我們的[為何選擇 Astro？](/zh-tw/concepts/why-astro/)條目來了解 Astro 的獨特之處。✨
+  <ListCard title="學習" icon="open-book">
+    - [Astro 的主要特色](/zh-tw/concepts/why-astro/)
+    - [群島架構](/zh-tw/concepts/islands/)
+    - [Astro 元件](/zh-tw/basics/astro-components/)
+    - [Astro 模板語法](/zh-tw/reference/astro-syntax/)
+  </ListCard>
 
+  <ListCard title="延伸" icon="puzzle">
+    - [與 React、Tailwind 等整合](/zh-tw/guides/integrations-guide/)
+    - [建立型別安全的內容合集](/zh-tw/guides/content-collections/)
+    - [以 view transition 增強導覽體驗](/zh-tw/guides/view-transitions/)
+    - [將專案連接到 headless CMS](/zh-tw/guides/cms/)
+  </ListCard>
+</CardGrid>
 
-## 在瀏覽器中嘗試 Astro
-
-造訪 [astro.new](https://astro.new/) 並從海量模板裡挑選一個作為起點。在瀏覽器中體驗完整可用的 Astro！
-
-<div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-  <Button href="https://astro.new/basics?on=stackblitz">啟動基本模板</Button>
-  <Button variant="outline" href="https://astro.new/">瀏覽所有模板 →</Button>
-</div>
-
-
-## 開始你的第一個專案
-
-利用我們的 `create astro` 命令列嚮導來讓你的新 Astro 專案在本地運行！
-
-<PackageManagerTabs>
-  <Fragment slot="npm">
-  ```shell
-  # 使用 npm 來創建新專案
-  npm create astro@latest
-  ```
-  </Fragment>
-  <Fragment slot="pnpm">
-  ```shell
-  # 使用 pnpm 來創建新專案
-  pnpm create astro@latest
-  ```
-  </Fragment>
-  <Fragment slot="yarn">
-  ```shell
-  # 使用 yarn 來創建新專案
-  yarn create astro
-  ```
-  </Fragment>
-</PackageManagerTabs>
-
-我們的[安裝指南](/zh-tw/install/auto/)提供了使用命令列嚮導安裝 Astro、從現有 Astro GitHub 儲存庫創建新項目以及手動安裝 Astro 的完整說明。
-
-
-## 學習 Astro
-
-查看 Astro 網站的一些關鍵概念與模式的範例！
-
-📚 新增[第一個頁面](/zh-tw/core-concepts/astro-pages/)到你的網站上。
-
-📚 閱讀關於 Astro [專案架構](/zh-tw/core-concepts/project-structure/)的資訊。
-
-📚 深入了解 Astro [基於檔案的路由](/zh-tw/core-concepts/routing/)。
-
-……在**參考**分頁找到完整 API 文檔。
-
-
-## 拓展 Astro
-
-🧰 用[預先構建的主題](https://astro.build/themes)開始你的下個專案。
-
-🧰 用官方和社群的[外掛程式與組件](https://astro.build/integrations/)將網站客製化。
-
-🧰 造訪[網站陳列所](https://astro.build/showcase)來獲得靈感。
-
-……參見我們的[整合使用指南](/zh-tw/guides/integrations-guide/)。
-
-
-## 加入我們的社群
-
-在 [Astro Discord](https://astro.build/chat) 上加入我們，和活躍且友善的社群分享成果或取得協助！
-
-💬 在 `#general` 頻道打聲招呼！
-
-💬 在 `#support` 頻道向支援小隊提出問題！
-
-💬 在 `#showcase` 頻道分享你的成果！
-
-
-## 有甚麼新鮮事？
-
-[Astro 部落格](https://astro.build/blog/)
-
-[Astro 變更日誌](https://github.com/withastro/astro/blob/main/packages/astro/CHANGELOG.md)
-
-
-## 翻譯
-
-你所閱讀的中文文檔是由這些了不起的人們翻譯的。如果感興趣，你可以[幫助我們翻譯！](https://contribute.docs.astro.build/guides/i18n/)
-
-<TranslatorList githubRepo="withastro/docs" />
-
-
-## 貢獻
-
-這些熱心的人們撰寫了此文檔。你可以[在 GitHub 上加入我們！](https://github.com/withastro/docs)
-
-<ContributorList githubRepo="withastro/docs" />
+<Discord title="遇到問題了？想要參與社群？" cta="加入我們的 Discord"/>

@@ -3,17 +3,18 @@ type: tutorial
 title: Envie seu primeiro script ao navegador
 description: >-
   Tutorial: Construa seu primeiro blog Astro —
-  Adicione interatividade no lado do cliente a sua navegação móvel com uma tag de script do Astro
+
+  Adicione interatividade no lado do cliente a sua navegação móvel com uma tag de script
+  Astro
 i18nReady: true
 ---
-import Badge from '~/components/Badge.astro';
 import Blanks from '~/components/tutorial/Blanks.astro';
 import Box from '~/components/tutorial/Box.astro';
 import Checklist from '~/components/Checklist.astro';
 import MultipleChoice from '~/components/tutorial/MultipleChoice.astro';
 import Option from '~/components/tutorial/Option.astro';
 import PreCheck from '~/components/tutorial/PreCheck.astro';
-
+import { Steps } from '@astrojs/starlight/components';
 
 Vamos adicionar um menu hambúrguer para abrir e fechar seus links em tamnhos de tela móveis, que necessita de interatividade no lado do cliente!
 
@@ -27,6 +28,7 @@ Vamos adicionar um menu hambúrguer para abrir e fechar seus links em tamnhos de
 
 Crie um componente `<Hamburguer />` para abrir e fechar sua navegação móvel.
 
+<Steps>
 1. Crie um arquivo chamado `Hamburguer.astro` em `src/components/`
   
 
@@ -36,26 +38,26 @@ Crie um componente `<Hamburguer />` para abrir e fechar sua navegação móvel.
     --- 
     ---
     <div class="hamburguer">
-      <span class="linha"></span>
-      <span class="linha"></span>
-      <span class="linha"></span>
+      <span class="line"></span>
+      <span class="line"></span>
+      <span class="line"></span>
     </div>
     ```
 
-3. Coloque esse novo componente `<Hamburguer />` logo antes do seu componente `<Navegacao />` em `Cabecalho.astro`. 
+3. Coloque esse novo componente `<Hamburguer />` logo antes do seu componente `<Navigation />` em `Header.astro`. 
 
     <details>
     <summary>Me mostre o código!</summary>
 
-    ```astro title="src/components/Cabecalho.astro" ins={2,7}
+    ```astro title="src/components/Header.astro" ins={2,7}
     ---
     import Hamburguer from './Hamburguer.astro';
-    import Navegacao from './Navegacao.astro';
+    import Navigation from './Navigation.astro';
     ---
     <header>
       <nav>
         <Hamburguer />
-        <Navegacao />
+        <Navigation />
       </nav>
     </header>
     ```
@@ -70,7 +72,7 @@ Crie um componente `<Hamburguer />` para abrir e fechar sua navegação móvel.
       cursor: pointer;
     }
 
-    .hamburguer .linha {
+    .hamburguer .line {
       display: block;
       width: 40px;
       height: 5px;
@@ -78,7 +80,7 @@ Crie um componente `<Hamburguer />` para abrir e fechar sua navegação móvel.
       background-color: #ff9776;
     }
 
-    .links-nav {
+    .nav-links {
       width: 100%;
       top: 5rem;
       left: 48px;
@@ -87,7 +89,7 @@ Crie um componente `<Hamburguer />` para abrir e fechar sua navegação móvel.
       margin: 0;
     }
 
-    .links-nav a {
+    .nav-links a {
       display: block;
       text-align: center;
       padding: 10px 0;
@@ -97,16 +99,16 @@ Crie um componente `<Hamburguer />` para abrir e fechar sua navegação móvel.
       text-transform: uppercase;
     }
 
-    .links-nav a:hover, a:focus {
+    .nav-links a:hover, a:focus {
       background-color: #ff9776;
     }
 
-    .expandido {
+    .expanded {
       display: unset;
     }
 
     @media screen and (min-width: 636px) {
-      .links-nav {
+      .nav-links {
         margin-left: 5em;
         display: block;
         position: static;
@@ -114,7 +116,7 @@ Crie um componente `<Hamburguer />` para abrir e fechar sua navegação móvel.
         background: none;
       }
 
-      .links-nav a {
+      .nav-links a {
         display: inline-block;
         padding: 15px 20px;
       }
@@ -124,6 +126,7 @@ Crie um componente `<Hamburguer />` para abrir e fechar sua navegação móvel.
       }
     }
     ```
+</Steps>
 
 
 ## Escreva sua primeira tag de script
@@ -132,40 +135,42 @@ Seu cabeçalho ainda não é **interativo** pois ele não consegue responder as 
 
 Adicionar uma tag `<script>` fornece JavaScript no lado do cliente para "escutar" por um evento do usuário e então responder de acordo.
 
+<Steps>
 1. Adicione a seguinte tag `<script>` em `index.astro`, logo antes da tag de fechamento `</body>`.
 
     ```astro title="src/pages/index.astro" ins={2-6}
-      <Rodape />
+      <Footer />
       <script>
         document.querySelector('.hamburguer').addEventListener('click', () => {
-          document.querySelector('.links-nav').classList.toggle('expandido');
+          document.querySelector('.nav-links').classList.toggle('expanded');
         });
       </script>
     </body>
     ```
 
 2. Verifique sua pré-visualização do navegador novamente em vários tamanhos, e verifique que você tem um menu de navegação funcional que é tanto responsivo ao tamanho da tela quanto responde a interação do usuário na página.
+</Steps>
 
 ### Importando um arquivo `.js`
 
 Ao invés de escrever seu JavaScript diretamente em cada página, você pode mover os conteúdos da sua tag `<script>` para seu próprio arquivo `.js` em seu projeto.
 
-
+<Steps>
 1. Crie `src/scripts/menu.js` (você terá que criar uma nova pasta `/scripts/`) e mova seu JavaScript para ela.
 
     ```js title="src/scripts/menu.js"
     document.querySelector('.hamburguer').addEventListener('click', () => {
-      document.querySelector('.links-nav').classList.toggle('expandido');
+      document.querySelector('.nav-links').classList.toggle('expanded');
     });
     ```
 
 2. Substitua os conteúdos da tag `<script>` em `index.astro` com a seguinte importação de arquivo:
 
     ```astro title="src/pages/index.astro" ins={7} del={3-5}
-      <Rodape />
+      <Footer />
       <script>
         document.querySelector('.hamburguer').addEventListener('click', () => {
-          document.querySelector('.links-nav').classList.toggle('expandido');
+          document.querySelector('.nav-links').classList.toggle('expanded');
         });
 
         import "../scripts/menu.js";
@@ -176,17 +181,18 @@ Ao invés de escrever seu JavaScript diretamente em cada página, você pode mov
 3. Verifique a pré-visualização do seu navegador novamente em um tamanho de tela menor e verifique que o menu hambúrguer ainda abre e fecha seus links de navegação. 
 
 
-4. Adicione o mesmo `<script>` por importação para suas outras duas páginas, `sobre.astro` e `blog.astro` e verifique que você tem um cabeçalho responsivo e interativo em cada página.
+4. Adicione o mesmo `<script>` por importação para suas outras duas páginas, `about.astro` e `blog.astro` e verifique que você tem um cabeçalho responsivo e interativo em cada página.
 
-    ```astro title="src/pages/sobre.astro & src/pages/blog.astro" ins={2-4}
-      <Rodape />
+    ```astro title="src/pages/about.astro & src/pages/blog.astro" ins={2-4}
+      <Footer />
       <script>
         import "../scripts/menu.js";
       </script>
     </body>
     ```
+</Steps>
 
-:::note[aprendizado]
+:::note[Aprendizado]
 Você tinha utilizado algum JavaScript anteriormente para construir partes do seu site:
 
 - Definir o título da sua página e cabeçalho dinamicamente

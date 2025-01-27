@@ -1,12 +1,12 @@
 ---
 # NOTE: This file is auto-generated from 'scripts/docgen.mjs'
 # Do not make edits to it directly, they will be overwritten.
-# Instead, change this file: https://github.com/withastro/astro/blob/main/packages/astro/src/%40types/astro.ts
+# Instead, change this file: https://github.com/withastro/astro/blob/main/packages/astro/src/types/public/config.ts
 # Translators, please remove this note and the <DontEditWarning/> component. 
 
 title: Configuration Reference
 i18nReady: true
-githubURL: https://github.com/withastro/astro/blob/main/packages/astro/src/%40types/astro.ts
+githubURL: https://github.com/withastro/astro/blob/main/packages/astro/src/types/public/config.ts
 ---
 
 import Since from '~/components/Since.astro'
@@ -27,6 +27,199 @@ export default defineConfig({
 ## Top-Level Options
 
 
+### site
+
+<p>
+
+**Type:** `string`
+</p>
+
+Your final, deployed URL. Astro uses this full URL to generate your sitemap and canonical URLs in your final build. It is strongly recommended that you set this configuration to get the most out of Astro.
+
+```js
+{
+  site: 'https://www.my-site.dev'
+}
+```
+
+### base
+
+<p>
+
+**Type:** `string`
+</p>
+
+The base path to deploy to. Astro will use this path as the root for your pages and assets both in development and in production build.
+
+In the example below, `astro dev` will start your server at `/docs`.
+
+```js
+{
+  base: '/docs'
+}
+```
+
+When using this option, all of your static asset imports and URLs should add the base as a prefix. You can access this value via `import.meta.env.BASE_URL`.
+
+The value of `import.meta.env.BASE_URL` will be determined by your `trailingSlash` config, no matter what value you have set for `base`.
+
+A trailing slash is always included if `trailingSlash: "always"` is set. If `trailingSlash: "never"` is set, `BASE_URL` will not include a trailing slash, even if `base` includes one.
+
+Additionally, Astro will internally manipulate the configured value of `config.base` before making it available to integrations. The value of `config.base` as read by integrations will also be determined by your `trailingSlash` configuration in the same way.
+
+In the example below, the values of `import.meta.env.BASE_URL` and `config.base` when processed will both be `/docs`:
+```js
+{
+	 base: '/docs/',
+	 trailingSlash: "never"
+}
+```
+
+In the example below, the values of `import.meta.env.BASE_URL` and `config.base` when processed will both be `/docs/`:
+
+```js
+{
+	 base: '/docs',
+	 trailingSlash: "always"
+}
+```
+
+### trailingSlash
+
+<p>
+
+**Type:** `'always' | 'never' | 'ignore'`<br />
+**Default:** `'ignore'`
+</p>
+
+Set the route matching behavior of the dev server. Choose from the following options:
+  - `'always'` - Only match URLs that include a trailing slash (ex: "/foo/")
+  - `'never'` - Never match URLs that include a trailing slash (ex: "/foo")
+  - `'ignore'` - Match URLs regardless of whether a trailing "/" exists
+
+Use this configuration option if your production host has strict handling of how trailing slashes work or do not work.
+
+You can also set this if you prefer to be more strict yourself, so that URLs with or without trailing slashes won't work during development.
+
+```js
+{
+  // Example: Require a trailing slash during development
+  trailingSlash: 'always'
+}
+```
+**See Also:**
+- build.format
+
+### redirects
+
+<p>
+
+**Type:** `Record.<string, RedirectConfig>`<br />
+**Default:** `{}`<br />
+<Since v="2.9.0" />
+</p>
+
+Specify a mapping of redirects where the key is the route to match
+and the value is the path to redirect to.
+
+You can redirect both static and dynamic routes, but only to the same kind of route.
+For example you cannot have a `'/article': '/blog/[...slug]'` redirect.
+
+
+```js
+{
+  redirects: {
+    '/old': '/new',
+    '/blog/[...slug]': '/articles/[...slug]',
+  }
+}
+```
+
+
+For statically-generated sites with no adapter installed, this will produce a client redirect using a [`<meta http-equiv="refresh">` tag](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta#http-equiv) and does not support status codes.
+
+When using SSR or with a static adapter in `output: static`
+mode, status codes are supported.
+Astro will serve redirected GET requests with a status of `301`
+and use a status of `308` for any other request method.
+
+You can customize the [redirection status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#redirection_messages) using an object in the redirect config:
+
+```js
+{
+  redirects: {
+    '/other': {
+      status: 302,
+      destination: '/place',
+    },
+  }
+}
+```
+
+### output
+
+<p>
+
+**Type:** `'static' | 'server'`<br />
+**Default:** `'static'`
+</p>
+
+Specifies the output target for builds.
+
+- `'static'` - Prerender all your pages by default, outputting a completely static site if none of your pages opt out of prerendering.
+- `'server'` - Use server-side rendering (SSR) for all pages by default, always outputting a server-rendered site.
+
+```js
+import { defineConfig } from 'astro/config';
+
+export default defineConfig({
+  output: 'static'
+})
+```
+**See Also:**
+- adapter
+
+### adapter
+
+<p>
+
+**Type:** `AstroIntegration`
+</p>
+
+Deploy to your favorite server, serverless, or edge host with build adapters. Import one of our first-party adapters for [Netlify](/en/guides/deploy/netlify/#adapter-for-ssr), [Vercel](/en/guides/deploy/vercel/#adapter-for-ssr), and more to engage Astro SSR.
+
+[See our On-demand Rendering guide](/en/guides/on-demand-rendering/) for more on SSR, and [our deployment guides](/en/guides/deploy/) for a complete list of hosts.
+
+```js
+import netlify from '@astrojs/netlify';
+{
+  // Example: Build for Netlify serverless deployment
+  adapter: netlify(),
+}
+```
+**See Also:**
+- output
+
+### integrations
+
+<p>
+
+**Type:** `AstroIntegration[]`
+</p>
+
+Extend Astro with custom integrations. Integrations are your one-stop-shop for adding framework support (like Solid.js), new features (like sitemaps), and new libraries (like Partytown).
+
+Read our [Integrations Guide](/en/guides/integrations-guide/) for help getting started with Astro Integrations.
+
+```js
+import react from '@astrojs/react';
+import tailwind from '@astrojs/tailwind';
+{
+  // Example: Add React + Tailwind support to Astro
+  integrations: [react(), tailwind()]
+}
+```
+
 ### root
 
 <p>
@@ -36,7 +229,7 @@ export default defineConfig({
 **Default:** `"."` (current working directory)
 </p>
 
-You should only provide this option if you run the `astro` CLI commands in a directory other than the project root directory. Usually, this option is provided via the CLI instead of the [Astro config file](/en/guides/configuring-astro/#supported-config-file-types), since Astro needs to know your project root before it can locate your config file.
+You should only provide this option if you run the `astro` CLI commands in a directory other than the project root directory. Usually, this option is provided via the CLI instead of the Astro config file, since Astro needs to know your project root before it can locate your config file.
 
 If you provide a relative path (ex: `--root: './my-project'`) Astro will resolve it against your current working directory.
 
@@ -125,67 +318,6 @@ The value can be either an absolute file system path or a path relative to the p
 }
 ```
 
-### redirects
-
-<p>
-
-**Type:** `Record.<string, RedirectConfig>`<br />
-**Default:** `{}`<br />
-<Since v="2.9.0" />
-</p>
-
-Specify a mapping of redirects where the key is the route to match
-and the value is the path to redirect to.
-
-You can redirect both static and dynamic routes, but only to the same kind of route.
-For example you cannot have a `'/article': '/blog/[...slug]'` redirect.
-
-
-```js
-{
-  redirects: {
-    '/old': '/new',
-    '/blog/[...slug]': '/articles/[...slug]',
-  }
-}
-```
-
-
-For statically-generated sites with no adapter installed, this will produce a client redirect using a [`<meta http-equiv="refresh">` tag](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta#http-equiv) and does not support status codes.
-
-When using SSR or with a static adapter in `output: static`
-mode, status codes are supported.
-Astro will serve redirected GET requests with a status of `301`
-and use a status of `308` for any other request method.
-
-You can customize the [redirection status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#redirection_messages) using an object in the redirect config:
-
-```js
-{
-  redirects: {
-    '/other': {
-      status: 302,
-      destination: '/place',
-    },
-  }
-}
-```
-
-### site
-
-<p>
-
-**Type:** `string`
-</p>
-
-Your final, deployed URL. Astro uses this full URL to generate your sitemap and canonical URLs in your final build. It is strongly recommended that you set this configuration to get the most out of Astro.
-
-```js
-{
-  site: 'https://www.my-site.dev'
-}
-```
-
 ### compressHTML
 
 <p>
@@ -194,82 +326,18 @@ Your final, deployed URL. Astro uses this full URL to generate your sitemap and 
 **Default:** `true`
 </p>
 
-This is an option to minify your HTML output and reduce the size of your HTML files. By default, Astro removes all whitespace from your HTML, including line breaks, from `.astro` components. This occurs both in development mode and in the final build.
-To disable HTML compression, set the `compressHTML` flag to `false`.
+This is an option to minify your HTML output and reduce the size of your HTML files.
+
+By default, Astro removes whitespace from your HTML, including line breaks, from `.astro` components in a lossless manner.
+Some whitespace may be kept as needed to preserve the visual rendering of your HTML. This occurs both in development mode and in the final build.
+
+To disable HTML compression, set `compressHTML` to false.
 
 ```js
 {
   compressHTML: false
 }
 ```
-
-### base
-
-<p>
-
-**Type:** `string`
-</p>
-
-The base path to deploy to. Astro will use this path as the root for your pages and assets both in development and in production build.
-
-In the example below, `astro dev` will start your server at `/docs`.
-
-```js
-{
-  base: '/docs'
-}
-```
-
-When using this option, all of your static asset imports and URLs should add the base as a prefix. You can access this value via `import.meta.env.BASE_URL`.
-
-The value of `import.meta.env.BASE_URL` will be determined by your `trailingSlash` config, no matter what value you have set for `base`.
-
-A trailing slash is always included if `trailingSlash: "always"` is set. If `trailingSlash: "never"` is set, `BASE_URL` will not include a trailing slash, even if `base` includes one.
-
-Additionally, Astro will internally manipulate the configured value of `config.base` before making it available to integrations. The value of `config.base` as read by integrations will also be determined by your `trailingSlash` configuration in the same way.
-
-In the example below, the values of `import.meta.env.BASE_URL` and `config.base` when processed will both be `/docs`:
-```js
-{
-	 base: '/docs/',
-	 trailingSlash: "never"
-}
-```
-
-In the example below, the values of `import.meta.env.BASE_URL` and `config.base` when processed will both be `/docs/`:
-
-```js
-{
-	 base: '/docs',
-	 trailingSlash: "always"
-}
-```
-
-### trailingSlash
-
-<p>
-
-**Type:** `'always' | 'never' | 'ignore'`<br />
-**Default:** `'ignore'`
-</p>
-
-Set the route matching behavior of the dev server. Choose from the following options:
-  - `'always'` - Only match URLs that include a trailing slash (ex: "/foo/")
-  - `'never'` - Never match URLs that include a trailing slash (ex: "/foo")
-  - `'ignore'` - Match URLs regardless of whether a trailing "/" exists
-
-Use this configuration option if your production host has strict handling of how trailing slashes work or do not work.
-
-You can also set this if you prefer to be more strict yourself, so that URLs with or without trailing slashes won't work during development.
-
-```js
-{
-  // Example: Require a trailing slash during development
-  trailingSlash: 'always'
-}
-```
-**See Also:**
-- build.format
 
 ### scopedStyleStrategy
 
@@ -289,50 +357,81 @@ Using `'class'` is helpful when you want to ensure that element selectors within
 Using `'where'` gives you more control over specificity, but requires that you use higher-specificity selectors, layers, and other tools to control which selectors are applied.
 Using `'attribute'` is useful when you are manipulating the `class` attribute of elements and need to avoid conflicts between your own styling logic and Astro's application of styles.
 
-### adapter
+### security
 
 <p>
 
-**Type:** `AstroIntegration`
+**Type:** `Record.<"checkOrigin", boolean> | undefined`<br />
+**Default:** `{checkOrigin: true}`<br />
+<Since v="4.9.0" />
 </p>
 
-Deploy to your favorite server, serverless, or edge host with build adapters. Import one of our first-party adapters for [Netlify](/en/guides/deploy/netlify/#adapter-for-ssr), [Vercel](/en/guides/deploy/vercel/#adapter-for-ssr), and more to engage Astro SSR.
+Enables security measures for an Astro website.
 
-[See our Server-side Rendering guide](/en/guides/server-side-rendering/) for more on SSR, and [our deployment guides](/en/guides/deploy/) for a complete list of hosts.
+These features only exist for pages rendered on demand (SSR) using `server` mode or pages that opt out of prerendering in `static` mode.
 
-```js
-import netlify from '@astrojs/netlify';
-{
-  // Example: Build for Netlify serverless deployment
-  adapter: netlify(),
-}
-```
-**See Also:**
-- output
-
-### output
-
-<p>
-
-**Type:** `'static' | 'server' | 'hybrid'`<br />
-**Default:** `'static'`
-</p>
-
-Specifies the output target for builds.
-
-- `'static'` - Building a static site to be deploy to any static host.
-- `'server'` - Building an app to be deployed to a host supporting SSR (server-side rendering).
-- `'hybrid'` - Building a static site with a few server-side rendered pages.
+By default, Astro will automatically check that the “origin” header
+matches the URL sent by each request in on-demand rendered pages. You can
+disable this behavior by setting `checkOrigin` to `false`:
 
 ```js
-import { defineConfig } from 'astro/config';
-
+// astro.config.mjs
 export default defineConfig({
-  output: 'static'
+  output: "server",
+  security: {
+    checkOrigin: false
+  }
 })
 ```
-**See Also:**
-- adapter
+
+#### security.checkOrigin
+
+<p>
+
+**Type:** `boolean`<br />
+**Default:** `true`<br />
+<Since v="4.9.0" />
+</p>
+
+Performs a check that the "origin" header, automatically passed by all modern browsers, matches the URL sent by each `Request`. This is used to provide Cross-Site Request Forgery (CSRF) protection.
+
+The "origin" check is executed only for pages rendered on demand, and only for the requests `POST`, `PATCH`, `DELETE` and `PUT` with
+one of the following `content-type` headers: `'application/x-www-form-urlencoded'`, `'multipart/form-data'`, `'text/plain'`.
+
+If the "origin" header doesn't match the `pathname` of the request, Astro will return a 403 status code and will not render the page.
+
+### vite
+
+<p>
+
+**Type:** `ViteUserConfig`
+</p>
+
+Pass additional configuration options to Vite. Useful when Astro doesn't support some advanced configuration that you may need.
+
+View the full `vite` configuration object documentation on [vite.dev](https://vite.dev/config/).
+
+#### Examples
+
+```js
+{
+  vite: {
+    ssr: {
+      // Example: Force a broken package to skip SSR processing, if needed
+      external: ['broken-npm-package'],
+    }
+  }
+}
+```
+
+```js
+{
+  vite: {
+    // Example: Add custom vite plugins directly to your Astro project
+    plugins: [myPlugin()],
+  }
+}
+```
 
 ## Build Options
 
@@ -341,13 +440,14 @@ export default defineConfig({
 
 <p>
 
-**Type:** `('file' | 'directory')`<br />
+**Type:** `('file' | 'directory' | 'preserve')`<br />
 **Default:** `'directory'`
 </p>
 
 Control the output file format of each page. This value may be set by an adapter for you.
-  - If `'file'`, Astro will generate an HTML file (ex: "/foo.html") for each page.
-  - If `'directory'`, Astro will generate a directory with a nested `index.html` file (ex: "/foo/index.html") for each page.
+  - `'file'`: Astro will generate an HTML file named for each page route. (e.g. `src/pages/about.astro` and `src/pages/about/index.astro` both build the file `/about.html`)
+  - `'directory'`: Astro will generate a directory with a nested `index.html` file for each page. (e.g. `src/pages/about.astro` and `src/pages/about/index.astro` both build the file `/about/index.html`)
+  - `'preserve'`: Astro will generate HTML files exactly as they appear in your source folder. (e.g. `src/pages/about.astro` builds `/about.html` and `src/pages/about/index.astro` builds the file `/about/index.html`)
 
 ```js
 {
@@ -362,8 +462,8 @@ Control the output file format of each page. This value may be set by an adapter
 
 #### Effect on Astro.url
 Setting `build.format` controls what `Astro.url` is set to during the build. When it is:
-- `directory` - The `Astro.url.pathname` will include a trailing slash to mimic folder behavior; ie `/foo/`.
-- `file` - The `Astro.url.pathname` will include `.html`; ie `/foo.html`.
+- `directory` - The `Astro.url.pathname` will include a trailing slash to mimic folder behavior. (e.g. `/foo/`)
+- `file` - The `Astro.url.pathname` will include `.html`. (e.g. `/foo.html`)
 
 This means that when you create relative URLs using `new URL('./relative', Astro.url)`, you will get consistent behavior between dev and build.
 
@@ -376,17 +476,17 @@ To prevent inconsistencies with trailing slash behaviour in dev, you can restric
 <p>
 
 **Type:** `string`<br />
-**Default:** `'./dist/client'`
+**Default:** `'./client'`
 </p>
 
-Controls the output directory of your client-side CSS and JavaScript when `output: 'server'` or `output: 'hybrid'` only.
+Controls the output directory of your client-side CSS and JavaScript when building a website with server-rendered pages.
 `outDir` controls where the code is built to.
 
 This value is relative to the `outDir`.
 
 ```js
 {
-  output: 'server', // or 'hybrid'
+  output: 'server',
   build: {
     client: './client'
   }
@@ -398,7 +498,7 @@ This value is relative to the `outDir`.
 <p>
 
 **Type:** `string`<br />
-**Default:** `'./dist/server'`
+**Default:** `'./server'`
 </p>
 
 Controls the output directory of server JavaScript when building to SSR.
@@ -438,22 +538,40 @@ Specifies the directory in the build output where Astro-generated assets (bundle
 
 <p>
 
-**Type:** `string`<br />
+**Type:** `string | Record.<string, string>`<br />
 **Default:** `undefined`<br />
 <Since v="2.2.0" />
 </p>
 
 Specifies the prefix for Astro-generated asset links. This can be used if assets are served from a different domain than the current site.
 
-For example, if this is set to `https://cdn.example.com`, assets will be fetched from `https://cdn.example.com/_astro/...` (regardless of the `base` option).
-You would need to upload the files in `./dist/_astro/` to `https://cdn.example.com/_astro/` to serve the assets.
-The process varies depending on how the third-party domain is hosted.
+This requires uploading the assets in your local `./dist/_astro` folder to a corresponding `/_astro/` folder on the remote domain.
 To rename the `_astro` path, specify a new directory in `build.assets`.
+
+To fetch all assets uploaded to the same domain (e.g. `https://cdn.example.com/_astro/...`), set `assetsPrefix` to the root domain as a string (regardless of your `base` configuration):
 
 ```js
 {
   build: {
     assetsPrefix: 'https://cdn.example.com'
+  }
+}
+```
+
+**Added in:** `astro@4.5.0`
+
+You can also pass an object to `assetsPrefix` to specify a different domain for each file type.
+In this case, a `fallback` property is required and will be used by default for any other files.
+
+```js
+{
+  build: {
+    assetsPrefix: {
+      'js': 'https://js.cdn.example.com',
+      'mjs': 'https://js.cdn.example.com',
+      'css': 'https://css.cdn.example.com',
+      'fallback': 'https://cdn.example.com'
+    }
   }
 }
 ```
@@ -527,69 +645,33 @@ Control whether project styles are sent to the browser in a separate css file or
 }
 ```
 
-## Prefetch Options
+### build.concurrency
 
 <p>
 
-**Type:** `boolean | object`
+**Type:** `number`<br />
+**Default:** `1`<br />
+<Since v="4.16.0" />
 </p>
 
-Enable prefetching for links on your site to provide faster page transitions.
-(Enabled by default on pages using the `<ViewTransitions />` router. Set `prefetch: false` to opt out of this behaviour.)
+The number of pages to build in parallel.
 
-This configuration automatically adds a prefetch script to every page in the project
-giving you access to the `data-astro-prefetch` attribute.
-Add this attribute to any `<a />` link on your page to enable prefetching for that page.
+**In most cases, you should not change the default value of `1`.**
 
-```html
-<a href="/about" data-astro-prefetch>About</a>
-```
-Further customize the default prefetching behavior using the [`prefetch.defaultStrategy`](#prefetchdefaultstrategy) and [`prefetch.prefetchAll`](#prefetchprefetchall) options.
-
-See the [Prefetch guide](/en/guides/prefetch/) for more information.
-
-### prefetch.prefetchAll
-
-<p>
-
-**Type:** `boolean`
-</p>
-
-Enable prefetching for all links, including those without the `data-astro-prefetch` attribute.
-This value defaults to `true` when using the `<ViewTransitions />` router. Otherwise, the default value is `false`.
+Use this option only when other attempts to reduce the overall rendering time (e.g. batch or cache long running tasks like fetch calls or data access) are not possible or are insufficient.
+If the number is set too high, page rendering may slow down due to insufficient memory resources and because JS is single-threaded.
 
 ```js
-prefetch: {
-	prefetchAll: true
+{
+  build: {
+    concurrency: 2
+  }
 }
 ```
 
-When set to `true`, you can disable prefetching individually by setting `data-astro-prefetch="false"` on any individual links.
-
-```html
-<a href="/about" data-astro-prefetch="false">About</a>
-```
-
-### prefetch.defaultStrategy
-
-<p>
-
-**Type:** `'tap' | 'hover' | 'viewport' | 'load'`<br />
-**Default:** `'hover'`
-</p>
-
-The default prefetch strategy to use when the `data-astro-prefetch` attribute is set on a link with no value.
-
-- `'tap'`: Prefetch just before you click on the link.
-- `'hover'`: Prefetch when you hover over or focus on the link. (default)
-- `'viewport'`: Prefetch as the links enter the viewport.
-- `'load'`: Prefetch all links on the page after the page is loaded.
-
-You can override this default value and select a different strategy for any individual link by setting a value on the attribute.
-
-```html
-<a href="/about" data-astro-prefetch="viewport">About</a>
-```
+ :::caution[Breaking changes possible]
+ This feature is stable and is not considered experimental. However, this feature is only intended to address difficult performance issues, and breaking changes may occur in a [minor release](/en/upgrade-astro/#semantic-versioning) to keep this option as performant as possible. Please check the [Astro CHANGELOG](https://github.com/withastro/astro/blob/refs/heads/next/packages/astro/CHANGELOG.md) for every minor release if you are using this feature.
+ :::
 
 ## Server Options
 
@@ -672,6 +754,85 @@ Pass a full URL string (e.g. "http://example.com") or a pathname (e.g. "/about")
 
 Set custom HTTP response headers to be sent in `astro dev` and `astro preview`.
 
+## Dev Toolbar Options
+
+
+### devToolbar.enabled
+
+<p>
+
+**Type:** `boolean`<br />
+**Default:** `true`
+</p>
+
+Whether to enable the Astro Dev Toolbar. This toolbar allows you to inspect your page islands, see helpful audits on performance and accessibility, and more.
+
+This option is scoped to the entire project, to only disable the toolbar for yourself, run `npm run astro preferences disable devToolbar`. To disable the toolbar for all your Astro projects, run `npm run astro preferences disable devToolbar --global`.
+
+## Prefetch Options
+
+<p>
+
+**Type:** `boolean | object`
+</p>
+
+Enable prefetching for links on your site to provide faster page transitions.
+(Enabled by default on pages using the `<ClientRouter />` router. Set `prefetch: false` to opt out of this behaviour.)
+
+This configuration automatically adds a prefetch script to every page in the project
+giving you access to the `data-astro-prefetch` attribute.
+Add this attribute to any `<a />` link on your page to enable prefetching for that page.
+
+```html
+<a href="/about" data-astro-prefetch>About</a>
+```
+Further customize the default prefetching behavior using the [`prefetch.defaultStrategy`](#prefetchdefaultstrategy) and [`prefetch.prefetchAll`](#prefetchprefetchall) options.
+
+See the [Prefetch guide](/en/guides/prefetch/) for more information.
+
+### prefetch.prefetchAll
+
+<p>
+
+**Type:** `boolean`
+</p>
+
+Enable prefetching for all links, including those without the `data-astro-prefetch` attribute.
+This value defaults to `true` when using the `<ClientRouter />` router. Otherwise, the default value is `false`.
+
+```js
+prefetch: {
+	prefetchAll: true
+}
+```
+
+When set to `true`, you can disable prefetching individually by setting `data-astro-prefetch="false"` on any individual links.
+
+```html
+<a href="/about" data-astro-prefetch="false">About</a>
+```
+
+### prefetch.defaultStrategy
+
+<p>
+
+**Type:** `'tap' | 'hover' | 'viewport' | 'load'`<br />
+**Default:** `'hover'`
+</p>
+
+The default prefetch strategy to use when the `data-astro-prefetch` attribute is set on a link with no value.
+
+- `'tap'`: Prefetch just before you click on the link.
+- `'hover'`: Prefetch when you hover over or focus on the link. (default)
+- `'viewport'`: Prefetch as the links enter the viewport.
+- `'load'`: Prefetch all links on the page after the page is loaded.
+
+You can override this default value and select a different strategy for any individual link by setting a value on the attribute.
+
+```html
+<a href="/about" data-astro-prefetch="viewport">About</a>
+```
+
 ## Image Options
 
 
@@ -679,20 +840,21 @@ Set custom HTTP response headers to be sent in `astro dev` and `astro preview`.
 
 <p>
 
-**Type:** `string`<br />
-**Default:** `undefined`<br />
+**Type:** `Object`<br />
+**Default:** `{route: '/_image', entrypoint: undefined}`<br />
 <Since v="3.1.0" />
 </p>
 
-Set the endpoint to use for image optimization in dev and SSR. Set to `undefined` to use the default endpoint.
-
-The endpoint will always be injected at `/_image`.
+Set the endpoint to use for image optimization in dev and SSR. The `entrypoint` property can be set to `undefined` to use the default image endpoint.
 
 ```js
 {
   image: {
-    // Example: Use a custom image endpoint
-    endpoint: './src/image-endpoint.ts',
+    // Example: Use a custom image endpoint at `/custom_endpoint`
+    endpoint: {
+		 	route: '/custom_endpoint',
+		 	entrypoint: 'src/my_endpoint.ts',
+		},
   },
 }
 ```
@@ -800,20 +962,53 @@ You can use wildcards to define the permitted `hostname` and `pathname` values a
   - End with '/**' to allow all sub-routes ('startsWith').
   - End with '/*' to allow only one level of sub-route.
 
-## Dev Toolbar Options
-
-
-### devToolbar.enabled
+### image.experimentalLayout
 
 <p>
 
-**Type:** `boolean`<br />
-**Default:** `true`
+**Type:** `ImageLayout`<br />
+**Default:** `undefined`
 </p>
 
-Whether to enable the Astro Dev Toolbar. This toolbar allows you to inspect your page islands, see helpful audits on performance and accessibility, and more.
+The default layout type for responsive images. Can be overridden by the `layout` prop on the image component.
+Requires the `experimental.responsiveImages` flag to be enabled.
+- `responsive` - The image will scale to fit the container, maintaining its aspect ratio, but will not exceed the specified dimensions.
+- `fixed` - The image will maintain its original dimensions.
+- `full-width` - The image will scale to fit the container, maintaining its aspect ratio.
 
-This option is scoped to the entire project, to only disable the toolbar for yourself, run `npm run astro preferences disable devToolbar`. To disable the toolbar for all your Astro projects, run `npm run astro preferences disable devToolbar --global`.
+### image.experimentalObjectFit
+
+<p>
+
+**Type:** `ImageFit`<br />
+**Default:** `"cover"`
+</p>
+
+The default object-fit value for responsive images. Can be overridden by the `fit` prop on the image component.
+Requires the `experimental.responsiveImages` flag to be enabled.
+
+### image.experimentalObjectPosition
+
+<p>
+
+**Type:** `string`<br />
+**Default:** `"center"`
+</p>
+
+The default object-position value for responsive images. Can be overridden by the `position` prop on the image component.
+Requires the `experimental.responsiveImages` flag to be enabled.
+
+### image.experimentalBreakpoints
+
+<p>
+
+**Type:** `Array.<number>`<br />
+**Default:** `[640, 750, 828, 1080, 1280, 1668, 2048, 2560] | [640, 750, 828, 960, 1080, 1280, 1668, 1920, 2048, 2560, 3200, 3840, 4480, 5120, 6016]`
+</p>
+
+The breakpoints used to generate responsive images. Requires the `experimental.responsiveImages` flag to be enabled. The full list is not normally used,
+but is filtered according to the source and output size. The defaults used depend on whether a local or remote image service is used. For remote services
+the more comprehensive list is used, because only the required sizes are generated. For local services, the list is shorter to reduce the number of images generated.
 
 ## Markdown Options
 
@@ -825,7 +1020,48 @@ This option is scoped to the entire project, to only disable the toolbar for you
 **Type:** `Partial<ShikiConfig>`
 </p>
 
-Shiki configuration options. See [the Markdown configuration docs](/en/guides/markdown-content/#shiki-configuration) for usage.
+Shiki is our default syntax highlighter. You can configure all options via the `markdown.shikiConfig` object:
+
+```js title="astro.config.mjs"
+import { defineConfig } from 'astro/config';
+
+export default defineConfig({
+  markdown: {
+    shikiConfig: {
+      // Choose from Shiki's built-in themes (or add your own)
+      // https://shiki.style/themes
+      theme: 'dracula',
+      // Alternatively, provide multiple themes
+      // See note below for using dual light/dark themes
+      themes: {
+        light: 'github-light',
+        dark: 'github-dark',
+      },
+      // Disable the default colors
+      // https://shiki.style/guide/dual-themes#without-default-color
+      // (Added in v4.12.0)
+      defaultColor: false,
+      // Add custom languages
+      // Note: Shiki has countless langs built-in, including .astro!
+      // https://shiki.style/languages
+      langs: [],
+      // Add custom aliases for languages
+      // Map an alias to a Shiki language ID: https://shiki.style/languages#bundled-languages
+      // https://shiki.style/guide/load-lang#custom-language-aliases
+      langAlias: {
+        cjs: "javascript"
+      },
+      // Enable word wrap to prevent horizontal scrolling
+      wrap: true,
+      // Add custom transformers: https://shiki.style/guide/transformers
+      // Find common transformers: https://shiki.style/packages/transformers
+      transformers: [],
+    },
+  },
+});
+```
+
+See the [code syntax highlighting guide](/en/guides/syntax-highlighting/) for usage and examples.
 
 ### markdown.syntaxHighlight
 
@@ -835,9 +1071,9 @@ Shiki configuration options. See [the Markdown configuration docs](/en/guides/ma
 **Default:** `shiki`
 </p>
 
-Which syntax highlighter to use, if any.
-- `shiki` - use the [Shiki](https://github.com/shikijs/shiki) highlighter
-- `prism` - use the [Prism](https://prismjs.com/) highlighter
+Which syntax highlighter to use for Markdown code blocks (\`\`\`), if any. This determines the CSS classes that Astro will apply to your Markdown code blocks.
+- `shiki` - use the [Shiki](https://shiki.style) highlighter (`github-dark` theme configured by default)
+- `prism` - use the [Prism](https://prismjs.com/) highlighter and [provide your own Prism stylesheet](/en/guides/syntax-highlighting/#add-a-prism-stylesheet)
 - `false` - do not apply syntax highlighting.
 
 ```js
@@ -862,7 +1098,7 @@ Pass [remark plugins](https://github.com/remarkjs/remark) to customize how your 
 import remarkToc from 'remark-toc';
 {
   markdown: {
-    remarkPlugins: [remarkToc]
+    remarkPlugins: [ [remarkToc, { heading: "contents"} ] ]
   }
 }
 ```
@@ -941,49 +1177,6 @@ Pass options to [remark-rehype](https://github.com/remarkjs/remark-rehype#api).
 };
 ```
 
-## Integrations
-
-Extend Astro with custom integrations. Integrations are your one-stop-shop for adding framework support (like Solid.js), new features (like sitemaps), and new libraries (like Partytown).
-
-Read our [Integrations Guide](/en/guides/integrations-guide/) for help getting started with Astro Integrations.
-
-```js
-import react from '@astrojs/react';
-import tailwind from '@astrojs/tailwind';
-{
-  // Example: Add React + Tailwind support to Astro
-  integrations: [react(), tailwind()]
-}
-```
-
-## Vite
-
-Pass additional configuration options to Vite. Useful when Astro doesn't support some advanced configuration that you may need.
-
-View the full `vite` configuration object documentation on [vitejs.dev](https://vitejs.dev/config/).
-
-#### Examples
-
-```js
-{
-  vite: {
-    ssr: {
-      // Example: Force a broken package to skip SSR processing, if needed
-      external: ['broken-npm-package'],
-    }
-  }
-}
-```
-
-```js
-{
-  vite: {
-    // Example: Add custom vite plugins directly to your Astro project
-    plugins: [myPlugin()],
-  }
-}
-```
-
 ## i18n
 
 <p>
@@ -996,18 +1189,6 @@ Configures i18n routing and allows you to specify some customization options.
 
 See our guide for more information on [internationalization in Astro](/en/guides/internationalization/)
 
-### i18n.defaultLocale
-
-<p>
-
-**Type:** `string`<br />
-<Since v="3.5.0" />
-</p>
-
-The default locale of your website/application. This is a required field.
-
-No particular language format or syntax is enforced, but we suggest using lower-case and hyphens as needed (e.g. "es", "pt-br") for greatest compatibility.
-
 ### i18n.locales
 
 <p>
@@ -1016,11 +1197,23 @@ No particular language format or syntax is enforced, but we suggest using lower-
 <Since v="3.5.0" />
 </p>
 
-A list of all locales supported by the website, including the `defaultLocale`. This is a required field.
+A list of all locales supported by the website. This is a required field.
 
 Languages can be listed either as individual codes (e.g. `['en', 'es', 'pt-br']`) or mapped to a shared `path` of codes (e.g.  `{ path: "english", codes: ["en", "en-US"]}`). These codes will be used to determine the URL structure of your deployed site.
 
 No particular language code format or syntax is enforced, but your project folders containing your content files must match exactly the `locales` items in the list. In the case of multiple `codes` pointing to a custom URL path prefix, store your content files in a folder with the same name as the `path` configured.
+
+### i18n.defaultLocale
+
+<p>
+
+**Type:** `string`<br />
+<Since v="3.5.0" />
+</p>
+
+The default locale of your website/application, that is one of the specified `locales`. This is a required field.
+
+No particular language format or syntax is enforced, but we suggest using lower-case and hyphens as needed (e.g. "es", "pt-br") for greatest compatibility.
 
 ### i18n.fallback
 
@@ -1078,55 +1271,206 @@ When `true`, all URLs will display a language prefix.
 URLs will be of the form `example.com/[locale]/content/` for every route, including the default language.
 Localized folders are used for every language, including the default.
 
-## Legacy Flags
-
-To help some users migrate between versions of Astro, we occasionally introduce `legacy` flags.
-These flags allow you to opt in to some deprecated or otherwise outdated behavior of Astro
-in the latest version, so that you can continue to upgrade and take advantage of new Astro releases.
-
-## Experimental Flags
-
-Astro offers experimental flags to give users early access to new features.
-These flags are not guaranteed to be stable.
-
-### experimental.optimizeHoistedScript
-
-<p>
-
-**Type:** `boolean`<br />
-**Default:** `false`<br />
-<Since v="2.10.4" />
-</p>
-
-Prevents unused components' scripts from being included in a page unexpectedly.
-The optimization is best-effort and may inversely miss including the used scripts. Make sure to double-check your built pages
-before publishing.
-Enable hoisted script analysis optimization by adding the experimental flag:
-
 ```js
-{
-	experimental: {
-		optimizeHoistedScript: true,
-	},
-}
+export default defineConfig({
+	i18n: {
+		defaultLocale: "en",
+		locales: ["en", "fr", "pt-br", "es"],
+		routing: {
+			prefixDefaultLocale: true,
+		}
+	}
+})
 ```
 
-### experimental.contentCollectionCache
+#### i18n.routing.redirectToDefaultLocale
+
+<p>
+
+**Type:** `boolean`<br />
+**Default:** `true`<br />
+<Since v="4.2.0" />
+</p>
+
+Configures whether or not the home URL (`/`) generated by `src/pages/index.astro`
+will redirect to `/[defaultLocale]` when `prefixDefaultLocale: true` is set.
+
+Set `redirectToDefaultLocale: false` to disable this automatic redirection at the root of your site:
+```js
+// astro.config.mjs
+export default defineConfig({
+  i18n:{
+    defaultLocale: "en",
+		locales: ["en", "fr"],
+    routing: {
+      prefixDefaultLocale: true,
+      redirectToDefaultLocale: false
+    }
+  }
+})
+```
+
+#### i18n.routing.fallbackType
+
+<p>
+
+**Type:** `"redirect" | "rewrite"`<br />
+**Default:** `"redirect"`<br />
+<Since v="4.15.0" />
+</p>
+
+When [`i18n.fallback`](#i18nfallback) is configured to avoid showing a 404 page for missing page routes, this option controls whether to [redirect](/en/guides/routing/#redirects) to the fallback page, or to [rewrite](/en/guides/routing/#rewrites) the fallback page's content in place.
+
+By default, Astro's i18n routing creates pages that redirect your visitors to a new destination based on your fallback configuration. The browser will refresh and show the destination address in the URL bar.
+
+When `i18n.routing.fallback: "rewrite"` is configured, Astro will create pages that render the contents of the fallback page on the original, requested URL.
+
+With the following configuration, if you have the file `src/pages/en/about.astro` but not `src/pages/fr/about.astro`, the `astro build` command will generate `dist/fr/about.html` with the same content as the `dist/en/about.html` page.
+Your site visitor will see the English version of the page at `https://example.com/fr/about/` and will not be redirected.
+
+```js
+//astro.config.mjs
+export default defineConfig({
+	 i18n: {
+    defaultLocale: "en",
+    locales: ["en", "fr"],
+    routing: {
+    	prefixDefaultLocale: false,
+    	fallbackType: "rewrite",
+    },
+    fallback: {
+    	fr: "en",
+    }
+  },
+})
+```
+
+#### i18n.routing.manual
+
+<p>
+
+**Type:** `string`<br />
+<Since v="4.6.0" />
+</p>
+
+When this option is enabled, Astro will **disable** its i18n middleware so that you can implement your own custom logic. No other `routing` options (e.g. `prefixDefaultLocale`) may be configured with `routing: "manual"`.
+
+You will be responsible for writing your own routing logic, or executing Astro's i18n middleware manually alongside your own.
+
+```js
+export default defineConfig({
+	i18n: {
+		defaultLocale: "en",
+		locales: ["en", "fr", "pt-br", "es"],
+		routing: {
+			prefixDefaultLocale: true,
+		}
+	}
+})
+```
+
+## env
+
+<p>
+
+**Type:** `object`<br />
+**Default:** `{}`<br />
+<Since v="5.0.0" />
+</p>
+
+Configuration options for type-safe environment variables.
+
+See our guide for more information on [environment variables in Astro](/en/guides/environment-variables/).
+
+### env.schema
+
+<p>
+
+**Type:** `EnvSchema`<br />
+**Default:** `{}`<br />
+<Since v="5.0.0" />
+</p>
+
+An object that uses `envField` to define the data type and properties of your environment variables: `context` (client or server), `access` (public or secret), a `default` value to use, and whether or not this environment variable is `optional` (defaults to `false`).
+```js
+// astro.config.mjs
+import { defineConfig, envField } from "astro/config"
+
+export default defineConfig({
+  env: {
+    schema: {
+      API_URL: envField.string({ context: "client", access: "public", optional: true }),
+      PORT: envField.number({ context: "server", access: "public", default: 4321 }),
+      API_SECRET: envField.string({ context: "server", access: "secret" }),
+    }
+  }
+})
+```
+
+`envField` supports four data types: string, number, enum, and boolean. `context` and `access` are required properties for all data types. The following shows the complete list of properties available for each data type:
+
+```js
+import { envField } from "astro/config"
+
+envField.string({
+   // context & access
+   optional: true,
+   default: "foo",
+   max: 20,
+   min: 1,
+   length: 13,
+   url: true,
+   includes: "oo",
+   startsWith: "f",
+   endsWith: "o",
+})
+envField.number({
+   // context & access
+   optional: true,
+   default: 15,
+   gt: 2,
+   min: 1,
+   lt: 3,
+   max: 4,
+   int: true,
+})
+envField.boolean({
+   // context & access
+   optional: true,
+   default: true,
+})
+envField.enum({
+   // context & access
+   values: ['foo', 'bar', 'baz'], // required
+   optional: true,
+   default: 'baz',
+})
+```
+
+### env.validateSecrets
 
 <p>
 
 **Type:** `boolean`<br />
 **Default:** `false`<br />
-<Since v="3.5.0" />
+<Since v="5.0.0" />
 </p>
 
-Enables a persistent cache for content collections when building in static mode.
+Whether or not to validate secrets on the server when starting the dev server or running a build.
+
+By default, only public variables are validated on the server when starting the dev server or a build, and private variables are validated at runtime only. If enabled, private variables will also be checked on start. This is useful in some continuous integration (CI) pipelines to make sure all your secrets are correctly set before deploying.
 
 ```js
-{
-	experimental: {
-		contentCollectionCache: true,
-	},
-}
+// astro.config.mjs
+import { defineConfig, envField } from "astro/config"
+
+export default defineConfig({
+  env: {
+    schema: {
+      // ...
+    },
+    validateSecrets: true
+  }
+})
 ```
 

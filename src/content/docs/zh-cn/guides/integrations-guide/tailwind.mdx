@@ -2,13 +2,15 @@
 type: integration
 title: '@astrojs/tailwind'
 description: 了解如何在你的 Astro 项目中使用 @astrojs/tailwind 集成。
+sidebar:
+  label: Tailwind
 githubIntegrationURL: 'https://github.com/withastro/astro/tree/main/packages/integrations/tailwind/'
 category: other
 i18nReady: true
 ---
 import PackageManagerTabs from '~/components/tabs/PackageManagerTabs.astro';
 
-**[Astro 集成][astro-integration]** 为你项目中的每一个 `.astro` 文件和 [框架组件](/zh-cn/core-concepts/framework-components/) 带来 [Tailwind](https://tailwindcss.com/) 的实用 CSS 类，同时支持 Tailwind 配置文件。
+**[Astro 集成][astro-integration]** 为你项目中的每一个 `.astro` 文件和 [框架组件](/zh-cn/guides/framework-components/) 带来 [Tailwind](https://tailwindcss.com/) 的实用 CSS 类，同时支持 Tailwind 配置文件。
 
 ## 为什么是 Tailwind？
 
@@ -149,7 +151,7 @@ export default defineConfig({
   integrations: [
     tailwind({
       // 示例：为 Tailwind 配置文件提供一个自定义路径
-      configFile: './custom-config.cjs',
+      configFile: './custom-config.mjs',
     }),
   ],
 });
@@ -172,6 +174,7 @@ export default defineConfig({
 
 ```js title="astro.config.mjs"
 import { defineConfig } from 'astro/config';
+import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
   // ...
@@ -187,11 +190,30 @@ export default defineConfig({
 
 你现在可以[导入你自己的 `base.css` 作为本地样式表](/zh-cn/guides/styling/#导入本地样式表) 。
 
+#### nesting
+
+设置为 `true` 以应用 [`tailwindcss/nesting` PostCSS 插件](https://tailwindcss.com/docs/using-with-preprocessors#nesting)，这样你就可以在兼容 Tailwind 语法的基础上编写嵌套的 CSS 声明。此选项默认为 `false`。
+
+```js ins="nesting: true"
+// astro.config.mjs
+import { defineConfig } from 'astro/config';
+import tailwind from '@astrojs/tailwind';
+
+export default defineConfig({
+  integrations: [
+    tailwind({
+      // 示例：允许在 Tailwind 的语法基础上编写嵌套的 CSS 声明
+      nesting: true,
+    }),
+  ],
+});
+```
+
 ## 例子
 
 * [Astro Tailwind Starter](https://github.com/withastro/astro/tree/latest/examples/with-tailwindcss?on=github) 为你提供一个基础的、使用 Tailwind 进行样式设计的可运行项目
 * Astro 的主页使用 Tailwind。查看其 [Tailwind 配置文件](https://github.com/withastro/astro.build/blob/main/tailwind.config.ts)或[示例组件](https://github.com/withastro/astro.build/blob/main/src/components/Checkbox.astro)
-* [Astro Ink](https://github.com/one-aalam/astro-ink)、[Sarissa Blog](https://github.com/iozcelik/SarissaBlogAstroStarter) 和 [Creek](https://github.com/robertguss/Astro-Theme-Creek) 主题使用 Tailwind 进行样式设计
+* [Astro Ink](https://github.com/one-aalam/astro-ink)、[Sarissa Blog](https://github.com/iozcelik/SarissaBlogAstroStarter)、[Astro Tech Blog](https://github.com/nicdun/astro-tech-blog)和 [Creek](https://github.com/robertguss/Astro-Theme-Creek) 主题使用 Tailwind 进行样式设计
 * [浏览 GitHub 上的 Astro Tailwind 项目](https://github.com/search?q=%22%40astrojs%2Ftailwind%22%3A+path%3A%2Fpackage.json\type=code)以获得更多的例子！
 
 ## 故障排除
@@ -206,7 +228,7 @@ error   The `text-special` class does not exist. If `text-special` is a custom c
 
 通过在你的 Tailwind 配置中添加一个插件来定义你的自定义样式来修复它，[而不是在全局样式表中使用`@layer`指令](https://tailwindcss.com/docs/functions-and-directives#using-apply-with-per-component-css)，添加如下内容：
 
-```js title="tailwind.config.cjs"
+```js title="tailwind.config.mjs"
 export default {
   // ...
   plugins: [
@@ -244,4 +266,4 @@ export default {
 
 [astro-integration]: /zh-cn/guides/integrations-guide/
 
-[astro-ui-frameworks]: /zh-cn/core-concepts/framework-components/#使用框架组件
+[astro-ui-frameworks]: /zh-cn/guides/framework-components/#使用框架组件

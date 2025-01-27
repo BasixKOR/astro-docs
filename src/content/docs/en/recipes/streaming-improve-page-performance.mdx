@@ -52,7 +52,7 @@ const factData = await factResponse.json();
 ```
 
 
-The Astro page below using these components can render parts of the page sooner. The `<head>`, `<body>`, and `<h1>` tags are no longer blocked by data fetches. The server will then fetch data for `RandomName` and `RandomFact` in parallel and stream the resulting HTML to the browser.
+The Astro page below using these components can render parts of the page sooner. The `<head>`, `<body>`, and `<h2>` tags are no longer blocked by data fetches. The server will then fetch data for `RandomName` and `RandomFact` in parallel and stream the resulting HTML to the browser.
 
 ```astro title="src/pages/index.astro"
 ---
@@ -80,7 +80,7 @@ You can also include promises directly in the template. Instead of blocking the 
 ---
 const personPromise = fetch('https://randomuser.me/api/')
   .then(response => response.json())
-  .then(arr => arr[0].name.first);
+  .then(personData => personData.results[0].name.first);
 const factPromise = fetch('https://catfact.ninja/fact')
   .then(response => response.json())
   .then(factData => factData.fact);

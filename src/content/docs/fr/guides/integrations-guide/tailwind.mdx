@@ -2,13 +2,15 @@
 type: integration
 title: '@astrojs/tailwind'
 description: "Apprenez comment utiliser l'intégration @astrojs/tailwind dans votre projet Astro."
+sidebar:
+  label: Tailwind
 githubIntegrationURL: 'https://github.com/withastro/astro/tree/main/packages/integrations/tailwind/'
 category: other
 i18nReady: true
 ---
 import PackageManagerTabs from '~/components/tabs/PackageManagerTabs.astro';
 
-Cette **[intégration Astro][astro-integration]** apporte les classes CSS utilitaires de [Tailwind](https://tailwindcss.com/) à chaque fichier `.astro` et [composant de framework](/fr/core-concepts/framework-components/) de votre projet, ainsi que le support du fichier de configuration de Tailwind.
+Cette **[intégration Astro][astro-integration]** apporte les classes CSS utilitaires de [Tailwind](https://tailwindcss.com/) à chaque fichier `.astro` et [composant de framework](/fr/guides/framework-components/) de votre projet, ainsi que le support du fichier de configuration de Tailwind.
 
 ## Pourquoi Tailwind ?
 
@@ -18,9 +20,7 @@ Si vous n'aimez pas ces paramètres prédéfinis, vous pouvez [personnaliser le 
 
 Tailwind est également un excellent choix pour ajouter des styles aux composants React, Preact ou Solid, qui ne supportent pas la balise `<style>` dans le fichier du composant.
 
-:::note
-Il est généralement déconseillé d'utiliser à la fois Tailwind et une autre méthode de style (par exemple Styled Components) dans le même fichier.
-:::
+Note: Il est généralement déconseillé d'utiliser à la fois Tailwind et une autre méthode de style (par exemple Styled Components) dans le même fichier.
 
 ## Installation
 
@@ -152,7 +152,7 @@ export default defineConfig({
   integrations: [
     tailwind({
       // Exemple : Fournir un chemin personnalisé vers un fichier de configuration Tailwind
-      configFile: './custom-config.cjs',
+      configFile: './custom-config.mjs',
     }),
   ],
 });
@@ -175,6 +175,7 @@ Pour désactiver ce comportement par défaut, mettez `applyBaseStyles` à `false
 
 ```js title="astro.config.mjs"
 import { defineConfig } from 'astro/config';
+import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
   // ...
@@ -188,7 +189,7 @@ export default defineConfig({
 });
 ```
 
-Vous pouvez maintenant [importer votre propre `base.css` comme feuille de style locale](/fr/guides/styling/#import-a-local-stylesheet).
+Vous pouvez maintenant [importer votre propre `base.css` comme feuille de style locale](/fr/guides/styling/#importer-une-feuille-de-style-locale).
 
 #### nesting
 
@@ -197,6 +198,7 @@ Mettez `true` pour appliquer le [`tailwindcss/nesting` PostCSS plugin](https://t
 ```js ins="nesting: true"
 // astro.config.mjs
 import { defineConfig } from 'astro/config';
+import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
   integrations: [
@@ -213,7 +215,7 @@ export default defineConfig({
 
 * [Astro Tailwind Starter](https://github.com/withastro/astro/tree/latest/examples/with-tailwindcss?on=github) vous permet de démarrer votre projet en utilisant Tailwind pour le stylisme.
 * La page d'accueil d'Astro utilise Tailwind. Consultez son [fichier de configuration Tailwind](https://github.com/withastro/astro.build/blob/main/tailwind.config.ts) ou un [composant d'exemple](https://github.com/withastro/astro.build/blob/main/src/components/Checkbox.astro).
-* Les thèmes [Astro Ink](https://github.com/one-aalam/astro-ink), [Sarissa Blog](https://github.com/iozcelik/SarissaBlogAstroStarter), et [Creek](https://github.com/robertguss/Astro-Theme-Creek) utilisent Tailwind pour le style.
+* Les thèmes [Astro Ink](https://github.com/one-aalam/astro-ink), [Sarissa Blog](https://github.com/iozcelik/SarissaBlogAstroStarter), [Astro Tech Blog](https://github.com/nicdun/astro-tech-blog)  et [Creek](https://github.com/robertguss/Astro-Theme-Creek) utilisent Tailwind pour le style.
 * [Parcourir les projets Astro Tailwind sur GitHub](https://github.com/search?q=%22%40astrojs%2Ftailwind%22%3A+path%3A%2Fpackage.json\&type=code) pour plus d'exemples !
 
 ## Dépannage
@@ -228,7 +230,7 @@ error   The `text-special` class does not exist. If `text-special` is a custom c
 
 [Au lieu d'utiliser les directives `@layer` dans une feuille de style globale](https://tailwindcss.com/docs/functions-and-directives#using-apply-with-per-component-css), définissez vos propres styles en ajoutant un plugin à votre configuration Tailwind pour résoudre ce problème :
 
-```js title="tailwind.config.cjs"
+```js title="tailwind.config.mjs"
 export default {
   // ...
   plugins: [
@@ -266,4 +268,4 @@ Vous pouvez également consulter notre [Documentation d'intégration Astro][astr
 
 [astro-integration]: /fr/guides/integrations-guide/
 
-[astro-ui-frameworks]: /fr/core-concepts/framework-components/#utilisation-des-composants-de-framework
+[astro-ui-frameworks]: /fr/guides/framework-components/#utilisation-des-composants-de-framework

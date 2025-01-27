@@ -1,6 +1,8 @@
 ---
 title: Turso & Astro
 description: Build locally with a SQLite file and deploy globally using Turso.
+sidebar:
+  label: Turso
 type: backend
 service: Turso
 stub: false
@@ -87,7 +89,7 @@ The following example fetches all `posts` from your table, then displays a list 
 
 ```astro title="src/components/BlogIndex.astro"
 ---
-import { turso } from '../../turso'
+import { turso } from '../turso'
 
 const { rows } = await turso.execute('SELECT * FROM posts')
 ---
@@ -107,7 +109,7 @@ The following example fetches a single entry from the `posts` table `WHERE` the 
 
 ```astro title="src/pages/index.astro"
 ---
-import { turso } from '../../turso'
+import { turso } from '../turso'
 
 const { slug } = Astro.params
 

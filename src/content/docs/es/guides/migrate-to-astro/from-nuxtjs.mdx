@@ -8,7 +8,7 @@ i18nReady: true
 ---
 import AstroVueTabs from '~/components/tabs/AstroVueTabs.astro'
 import PackageManagerTabs from '~/components/tabs/PackageManagerTabs.astro'
-import FileTree from '~/components/FileTree.astro'
+import { FileTree } from '@astrojs/starlight/components';
 
 Aquí hay algunos conceptos clave y estragias de migración para ayudarte a comenzar. ¡Usa el resto de nuestra documentación y nuestra [comunidad de Discord](https://astro.build/chat) para continuar!
 
@@ -18,9 +18,9 @@ Aquí hay algunos conceptos clave y estragias de migración para ayudarte a come
 
 Nuxt y Astro comparten algunas similitudes que te ayudarán a migrar tu proyecto:
 
-- Los proyectos de Astro también pueden ser SSG o [SSR con prerenderizado a nivel de página](/es/guides/server-side-rendering/).
-- Astro usa un enrutamiento basado en archivos y [permite que las páginas con nombres creen rutas dinámicas](/es/core-concepts/routing/#rutas-dinámicas)
-- Astro es [basado en componentes](/es/core-concepts/astro-components/) y la estructura de tu marcado será similar antes y después de tu migración.
+- Los proyectos de Astro también pueden ser SSG o [SSR con prerenderizado a nivel de página](/es/guides/on-demand-rendering/).
+- Astro usa un enrutamiento basado en archivos y [permite que las páginas con nombres creen rutas dinámicas](/es/guides/routing/#rutas-dinámicas)
+- Astro es [basado en componentes](/es/basics/astro-components/) y la estructura de tu marcado será similar antes y después de tu migración.
 - Astro tiene [una integración oficial para usar componentes de Vue](/es/guides/integrations-guide/vue/).
 - Astro tiene soporte para [instalar paquetes de NPM](/es/guides/imports/#paquetes-npm), incluyendo librerías de Vue. Puedes mantener algunos o todos tus componentes y dependencias de Vue existentes.
 
@@ -30,7 +30,7 @@ Cuando reconstruyas tu sitio Nuxt en Astro, notarás algunas diferencias importa
 
 - Nuxt es una SPA basada en Vue (aplicación de una sola página). Los sitios de Astro son aplicaciones multipágina construidas usando componentes `.astro`, pero también pueden admitir React, Preact, Vue.js, Svelte, SolidJS, AlpineJS, Lit y plantillas HTML sin procesar.
 
-- [Enrutamiento de Página](/es/core-concepts/astro-pages/#enrutamiento-basado-en-archivos): Nuxt usa `vue-router` para el enrutamiento SPA, y `vue-meta` para administrar `<head>`. En Astro, crearás rutas de página HTML separadas y controlarás tu `<head>` directamente o en un componente plantilla.
+- [Enrutamiento de Página](/es/basics/astro-pages/#enrutamiento-basado-en-archivos): Nuxt usa `vue-router` para el enrutamiento SPA, y `vue-meta` para administrar `<head>`. En Astro, crearás rutas de página HTML separadas y controlarás tu `<head>` directamente o en un componente plantilla.
 
 - [Orientado al contenido](/es/concepts/why-astro/#orientado-al-contenido): Astro fue diseñado para mostrar tu contenido y permitirte optar por la interactividad solo cuando sea necesario. Una aplicación Nuxt existente puede estar construida para una alta interactividad del lado del cliente. Astro tiene capacidades incorporadas para trabajar con tu contenido, como la generación de páginas, pero puede requerir técnicas avanzadas de Astro para incluir elementos que son más difíciles de replicar usando componentes `.astro`, como los paneles de control.
 
@@ -41,7 +41,7 @@ Cada migración de proyecto se verá diferente, pero hay algunas acciones comune
 ### Crea un nuevo proyecto Astro
 Utiliza el comando `create astro` en tu gestor de paquetes para lanzar el asistente de linea de comandos de Astro o elige un tema de la comunidad del [catálogo de temas de Astro](https://astro.build/themes).
 
-Puedes pasar un argumento `--template` al comando `create astro` para iniciar un nuevo proyecto Astro con uno de nuestros ejemplos oficiales (por ejemplo, `docs`, `blog`, `portfolio`). O, puedes [iniciar un nuevo proyecto desde cualquier repositorio Astro existente en GitHub](/es/install/auto/#plantillas-de-inicio).
+Puedes pasar un argumento `--template` al comando `create astro` para iniciar un nuevo proyecto Astro con uno de nuestros ejemplos oficiales (por ejemplo, `docs`, `blog`, `portfolio`). O, puedes [iniciar un nuevo proyecto desde cualquier repositorio Astro existente en GitHub](/es/install-and-setup/#usa-un-tema-o-una-plantilla-de-inicio).
 
   <PackageManagerTabs>
     <Fragment slot="npm">
@@ -103,7 +103,7 @@ Aqui hay algunos consejos para convertir un componente `.vue` de Nuxt en un comp
 
 1. Usa la etiqueta `<template>` de la función de componente NuxtJS existente como base para tu plantilla HTML.
 
-2. Cambia cualquier [sintaxis de Nuxt o Vue a Astro](#referencia-convertir-la-sintaxis-de-nuxtjs-a-astro) o a los estándares web de HTML. Esto incluye `<NextLink>`, `:class`, `{{variable}}`, y `v-if`, por ejemplo.
+2. Cambia cualquier [sintaxis de Nuxt o Vue a Astro](#referencia-convertir-la-sintaxis-de-nuxtjs-a-astro) o a los estándares web de HTML. Esto incluye `<NuxtLink>`, `:class`, `{{variable}}`, y `v-if`, por ejemplo.
 
 3. Mueve la etiqueta `<script>` de JavaScript, a un "valla de código" (`---`). Convierte las propiedades de recuperación de datos de tu componente a JavaScript del lado del servidor - ver [la obtención de datos de Nuxt en Astro](#obtención-de-datos-de-nuxt-a-astro).
 
@@ -195,7 +195,7 @@ Compara el siguiente componente de Nuxt con un componente de Astro:
 
 ### Migrando Archivos de Diseño
 
-Puede resultarte útil comenzar convirtiendo tus diseños y plantillas de Nuxt en [componentes de diseño de Astro](/es/core-concepts/layouts/).
+Puede resultarte útil comenzar convirtiendo tus diseños y plantillas de Nuxt en [componentes de diseño de Astro](/es/basics/layouts/).
 
 Cada página de Astro requiere explícitamente que las etiquetas `<html>`, `<head>` y `<body>` estén presentes. Tu `layout.vue` y plantillas de Nuxt no incluirán estas.
 
@@ -220,13 +220,13 @@ También puede que desees reutilizar el código de [la propiedad `head` de la p�
 
 ### Migrando Páginas y Publicaciones
 
-En NuxtJS, tus [páginas](/es/core-concepts/astro-pages/) viven en `/pages`. En Astro, **todo el contenido de tu página debe vivir dentro de `src/pages` o `src/content`**.
+En NuxtJS, tus [páginas](/es/basics/astro-pages/) viven en `/pages`. En Astro, **todo el contenido de tu página debe vivir dentro de `src/pages` o `src/content`**.
 
 #### Páginas de Vue
 
 Tus páginas Vue existentes (`.vue`) de Nuxt deberán [convertirse de archivos Vue a páginas `.astro`](#convertir-páginas-vue-sfc-a-archivos-astro). No puedes usar un archivo de página Vue existente en Astro.
 
-Estas [páginas `.astro`](/es/core-concepts/astro-pages/) deben estar ubicadas dentro de `src/pages/` y tendrán rutas de página generadas automáticamente en función de su ruta de archivo.
+Estas [páginas `.astro`](/es/basics/astro-pages/) deben estar ubicadas dentro de `src/pages/` y tendrán rutas de página generadas automáticamente en función de su ruta de archivo.
 
 ##### Nombres de ruta de archivo dinámico
 
@@ -254,7 +254,7 @@ Para convertir a Astro, cambia esta propiedad de ruta dinámica subrayada (por e
 
 #### Páginas de Markdown y MDX
 
-Astro tiene soporte incorporado para Markdown y una integración opcional para archivos MDX. Puedes reutilizar cualquier página Markdown y MDX existente, pero puede que requieran algunos ajustes en tu frontmatter, como agregar [la propiedad especial `layout` del frontmatter de Astro](/es/core-concepts/layouts/#plantillas-de-markdownmdx).
+Astro tiene soporte incorporado para Markdown y una integración opcional para archivos MDX. Puedes reutilizar cualquier página Markdown y MDX existente, pero puede que requieran algunos ajustes en tu frontmatter, como agregar [la propiedad especial `layout` del frontmatter de Astro](/es/basics/layouts/#plantillas-de-markdown).
 
 Ya no necesitarás crear manualmente páginas para cada ruta generada por Markdown o usar un paquete externo como `@nuxt/content`. Estos archivos se pueden colocar dentro de `src/pages/` para aprovechar el enrutamiento automático basado en archivos.
 
@@ -337,8 +337,8 @@ En Nuxt, para generar una página dinámica, debes:
 - [Usar la función `generate` en `nuxt.config.js`](https://nuxtjs.org/docs/configuration-glossary/configuration-generate/) para definir todas las rutas estáticas posibles.
 
 En astro, similarmente tienes dos opciones: 
-- [Usar renderizado del lado del servidor (SSR)](/es/guides/server-side-rendering/).
-- Exporta una función `getStaticPaths()` en el frontmatter de una página de Astro para indicarle al framework qué [rutas estáticas generar dinámicamente](/es/core-concepts/routing/#rutas-dinámicas).
+- [Usar renderizado del lado del servidor (SSR)](/es/guides/on-demand-rendering/).
+- Exporta una función `getStaticPaths()` en el frontmatter de una página de Astro para indicarle al framework qué [rutas estáticas generar dinámicamente](/es/guides/routing/#rutas-dinámicas).
 
 #### Convertir una función `generate` en Nuxt a una función `getStaticPaths` en Astro.
 

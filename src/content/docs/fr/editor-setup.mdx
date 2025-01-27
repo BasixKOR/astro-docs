@@ -3,8 +3,10 @@ title: Configuration de l'éditeur de code
 description: Configurer votre éditeur de code pour construire avec Astro.
 i18nReady: true
 ---
-import Badge from '~/components/Badge.astro';
+
 import PackageManagerTabs from '~/components/tabs/PackageManagerTabs.astro'
+import { Steps } from '@astrojs/starlight/components';
+import Badge from "~/components/Badge.astro"
 
 Customisez votre éditeur de code pour améliorer l'expérience de développement avec Astro et débloquer de nouvelles fonctionnalités.
 
@@ -20,24 +22,32 @@ Astro fonctionne avec n'importe quel éditeur decode. Cependant, VS Code est l'�
 
 Pour commencer, installez l'extension [Astro VS Code](https://marketplace.visualstudio.com/items?itemName=astro-build.astro-vscode) dès maintenant.
 
-📚 Voir comment [configurer TypeScript](/fr/guides/typescript/) dans votre projet Astro.
+import ReadMore from '~/components/ReadMore.astro';
+
+<ReadMore>Voir comment [configurer TypeScript](/fr/guides/typescript/) dans votre projet Astro.</ReadMore>
+
+## Zed
+
+[Zed](https://zed.dev/) est un éditeur de code open-source qui a ajouté le support d'Astro dans la version 0.123.2. Vous pouvez installer l'[extension Astro](https://github.com/zed-industries/zed/tree/main/extensions/astro) dans l'onglet Extensions de l'IDE. Cette extension inclut des fonctionnalités telles que la coloration syntaxique, la complétion de code et le formatage.
 
 ## JetBrains IDEs
 
-Le support initial d'Astro est disponible dans WebStorm 2023.1. Vous pouvez installer le plugin officiel via [JetBrains Marketplace] (https://plugins.jetbrains.com/plugin/20959-astro) ou en recherchant "Astro" dans l'onglet Plugins de l'IDE. Ce plugin inclut des fonctionnalités telles que la coloration syntaxique, la complétion de code et le formatage, et prévoit d'ajouter des fonctionnalités encore plus avancées dans le futur. Il est également disponible pour tous les autres [JetBrains IDE avec support JavaScript] (https://www.jetbrains.com/products/#lang=js&type=ide).
+[Webstorm](https://www.jetbrains.com/webstorm/) est un IDE JavaScript et TypeScript qui a ajouté la prise en charge d'Astro Language Server dans la version 2024.2. Cette mise à jour apporte des fonctionnalités telles que la coloration syntaxique, la saisie semi-automatique du code et la mise en forme.
 
-Le prochain [Fleet IDE](https://www.jetbrains.com/fleet/) de JetBrains inclut le support des serveurs de langue et pourra utiliser l'outillage Astro officiel.
+Installez le plugin officiel via [le marketplace de JetBrains](https://plugins.jetbrains.com/plugin/20959-astro) ou en recherchant « Astro » dans l'onglet Plugins de l'IDE. Vous pouvez activer/désactiver le serveur de langue dans `Settings | Languages & Frameworks | TypeScript | Astro`.
+
+Pour plus d'informations sur la prise en charge d'Astro dans Webstorm, consultez [la page Astro dans la documentation officielle de Webstorm](https://www.jetbrains.com/help/webstorm/astro.html).
 
 ## Autres éditeurs de code
 
 Notre incroyable communauté gère plusieurs extensions pour d'autres éditeurs populaires, notamment :
 
-- [VS Code Extension on Open VSX](https://open-vsx.org/extension/astro-build/astro-vscode) <span style="margin: 0.25em;"><Badge variant="accent">Official</Badge></span> - L'extension officielle Astro VS Code, disponible sur le registre Open VSX pour les plateformes ouvertes telles que [VSCodium](https://vscodium.com/)
-- [Nova Extension](https://extensions.panic.com/extensions/sciencefidelity/sciencefidelity.astro/) <span style="margin: 0.25em;"><Badge variant="neutral">Community</Badge></span> - Fournit la coloration syntaxique et la complétion de code pour Astro à l'intérieur de Nova
-- [Vim Plugin](https://github.com/wuelnerdotexe/vim-astro) <span style="margin: 0.25em;"><Badge variant="neutral">Community</Badge></span> - Fournit la coloration syntaxique, l'indentation et le support de pliage de code pour Astro à l'intérieur de Vim ou Neovim.
-- Neovim [LSP](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#astro) and [TreeSitter](https://github.com/virchau13/tree-sitter-astro) Plugins <span style="margin: 0.25em;"><Badge variant="neutral">Community</Badge></span> - Fournit la coloration syntaxique, l'analyse des repertoires et l'achèvement du code pour Astro dans Neovim.
-- Emacs - Voir les instructions pour [Configurer Emacs et Eglot](https://medium.com/@jrmjrm/configuring-emacs-and-eglot-to-work-with-astro-language-server-9408eb709ab0) <span style="margin: 0.25em;"><Badge variant="neutral">Community</Badge></span> pour travailler avec Astro
-- [Coloration syntaxique Astro pour Sublime Text](https://packagecontrol.io/packages/Astro) <span style="margin: 0.25em;"><Badge variant="neutral">Community</Badge></span> - Le paquet Astro pour Sublime Text, disponible sur le gestionnaire de paquets de Sublime Text.
+- [VS Code Extension on Open VSX](https://open-vsx.org/extension/astro-build/astro-vscode) <span style="margin: 0.25em;"><Badge text="Official" /></span> - L'extension officielle Astro VS Code, disponible sur le registre Open VSX pour les plateformes ouvertes telles que [VSCodium](https://vscodium.com/)
+- [Nova Extension](https://extensions.panic.com/extensions/sciencefidelity/sciencefidelity.astro/) <span style="margin: 0.25em;"><Badge class="neutral-badge" text="Community" /></span> - Fournit la coloration syntaxique et la complétion de code pour Astro à l'intérieur de Nova
+- [Vim Plugin](https://github.com/wuelnerdotexe/vim-astro) <span style="margin: 0.25em;"><Badge class="neutral-badge" text="Community" /></span> - Fournit la coloration syntaxique, l'indentation et le support de pliage de code pour Astro à l'intérieur de Vim ou Neovim.
+- Neovim [LSP](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#astro) and [TreeSitter](https://github.com/virchau13/tree-sitter-astro) Plugins <span style="margin: 0.25em;"><Badge class="neutral-badge" text="Community" /></span> - Fournit la coloration syntaxique, l'analyse des repertoires et l'achèvement du code pour Astro dans Neovim.
+- Emacs - Voir les instructions pour [Configurer Emacs et Eglot](https://medium.com/@jrmjrm/configuring-emacs-and-eglot-to-work-with-astro-language-server-9408eb709ab0) <span style="margin: 0.25em;"><Badge class="neutral-badge" text="Community" /></span> pour travailler avec Astro
+- [Coloration syntaxique Astro pour Sublime Text](https://packagecontrol.io/packages/Astro) <span style="margin: 0.25em;"><Badge class="neutral-badge" text="Community" /></span> - Le paquet Astro pour Sublime Text, disponible sur le gestionnaire de paquets de Sublime Text.
 
 ## Éditeur de code "In-Browser"
 
@@ -45,7 +55,7 @@ En plus des éditeurs locaux, Astro fonctionne aussi bien sur les éditeurs _"In
 
 - [StackBlitz](https://stackblitz.com/) et [CodeSandbox](https://codesandbox.io/) - des éditeurs en ligne qui s'exécutent dans votre navigateur, avec un support intégré de coloration syntaxique pour les fichiers `.astro`. Aucune installation ou configuration n'est nécessaire !
 - [GitHub.dev](https://github.dev/)) - vous permet d'installer l'extension Astro VS Code en tant qu'[extension web](https://code.visualstudio.com/api/extension-guides/web-extensions), ce qui ne vous donne accès qu'à certaines des fonctionnalités complètes de l'extension. Actuellement, seule la coloration syntaxique est prise en charge.
-- [Gitpod](https://gitpod.io/) - un environnement de développement complet dans le nuage qui peut installer l'extension officielle Astro VS Code d'Open VSX.
+- [IDX](https://idx.dev) et [Gitpod](https://gitpod.io/) - un environnement de développement complet dans le nuage qui peut installer l'extension officielle Astro VS Code d'Open VSX.
 
 ## Autres Outils
 
@@ -57,50 +67,75 @@ Voir [le guide de l'utilisateur du projet](https://ota-meshi.github.io/eslint-pl
 
 ### Stylelint
 
-[Stylelint](https://stylelint.io/) est un linter populaire pour CSS. [Une configuration Stylelint maintenue par la communauté] (https://github.com/ota-meshi/stylelint-config-html) fournit un support Astro. 
+[Stylelint](https://stylelint.io/) est un linter populaire pour CSS. [Une configuration Stylelint maintenue par la communauté](https://github.com/ota-meshi/stylelint-config-html) fournit un support Astro. 
 
 Les instructions d'installation, l'intégration de l'éditeur et d'autres informations sont disponibles dans le README du projet.
 
 ### Prettier
 
-[Prettier](https://prettier.io/) est un formateur populaire pour JavaScript, HTML, CSS, et plus encore. Si vous utilisez [Astro VS Code Extension] (https://marketplace.visualstudio.com/items?itemName=astro-build.astro-vscode) ou [le serveur de langage Astro dans un autre éditeur](#autres-éditeurs-de-code), le formatage du code avec Prettier est inclus.
+[Prettier](https://prettier.io/) est un formateur populaire pour JavaScript, HTML, CSS, et plus encore. Si vous utilisez [Astro VS Code Extension](https://marketplace.visualstudio.com/items?itemName=astro-build.astro-vscode) ou [le serveur de langage Astro dans un autre éditeur](#autres-éditeurs-de-code), le formatage du code avec Prettier est inclus.
 
 Pour ajouter le support du formatage des fichiers `.astro` en dehors de l'éditeur (par exemple, CLI) ou dans des éditeurs qui ne supportent pas notre outil d'édition, installez [le plugin officiel Astro Prettier](https://github.com/withastro/prettier-plugin-astro).
 
-Pour commencer, installez d'abord Prettier et le plugin :
+<Steps>
+1. Installez `prettier` et `prettier-plugin-astro`.
 
-<PackageManagerTabs>
-  <Fragment slot="npm">
-  ```shell
-  npm install --save-dev prettier prettier-plugin-astro
-  ```
-  </Fragment>
-  <Fragment slot="pnpm">
-  ```shell
-  pnpm add -D prettier prettier-plugin-astro
-  ```
-  </Fragment>
-  <Fragment slot="yarn">
-  ```shell
-  yarn add --dev prettier prettier-plugin-astro
-  ```
-  </Fragment>
-</PackageManagerTabs>
+    <PackageManagerTabs>
+      <Fragment slot="npm">
+      ```shell
+      npm install --save-dev prettier prettier-plugin-astro
+      ```
+      </Fragment>
+      <Fragment slot="pnpm">
+      ```shell
+      pnpm add -D prettier prettier-plugin-astro
+      ```
+      </Fragment>
+      <Fragment slot="yarn">
+      ```shell
+      yarn add --dev prettier prettier-plugin-astro
+      ```
+      </Fragment>
+    </PackageManagerTabs>
 
-Prettier détectera alors automatiquement le plugin et l'utilisera pour traiter les fichiers `.astro` lorsque vous le lancerez :
+2. Créez un fichier de configuration `.prettierrc.mjs` à la racine de votre projet et ajoutez-y `prettier-plugin-astro`.
 
-```shell
-prettier --write .
-```
+    Dans ce fichier, vous pouvez également spécifier manuellement l'analyseur pour les fichiers Astro.
+
+    ```js title=".prettierrc.mjs"
+    /** @type {import("prettier").Config} */
+    export default {
+      plugins: ['prettier-plugin-astro'],
+      overrides: [
+        {
+          files: '*.astro',
+          options: {
+            parser: 'astro',
+          },
+        },
+      ],
+    };
+    ```
+
+3. Exécutez la commande `prettier . --write` dans le terminal pour formater vos fichiers.
+
+    <PackageManagerTabs>
+      <Fragment slot="npm">
+      ```shell
+      npx prettier . --write
+      ```
+      </Fragment>
+      <Fragment slot="pnpm">
+      ```shell
+      pnpm exec prettier . --write
+      ```
+      </Fragment>
+      <Fragment slot="yarn">
+      ```shell
+      yarn prettier . --write
+      ```
+      </Fragment>
+    </PackageManagerTabs>
+</Steps>
 
 Voir le [README du plugin Prettier](https://github.com/withastro/prettier-plugin-astro/blob/main/README.md) pour plus d'informations sur les options supportées, comment configurer Prettier dans VS Code, et plus encore.
-
-:::caution[Utilisation avec pnpm]
-En raison de problèmes en amont dans Prettier, le plugin ne sera pas automatiquement détecté lors de l'utilisation de [pnpm](https://pnpm.io/). Pour que le plugin soit détecté, le paramètre suivant doit être ajouté lors de l'exécution de Prettier :
-
-```shell
-prettier --write . --plugin=prettier-plugin-astro
-```
-
-Des paramètres supplémentaires sont également nécessaires pour l'utilisation de Prettier dans VS Code. Voir le README du plugin pour plus d'informations.
-:::

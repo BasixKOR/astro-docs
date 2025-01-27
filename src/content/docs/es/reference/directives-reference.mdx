@@ -4,6 +4,7 @@ i18nReady: true
 ---
 
 import Since from '~/components/Since.astro';
+import ReadMore from '~/components/ReadMore.astro'
 
 **Las directivas de maquetado** son atributos especiales de HTML disponibles dentro del maquetado de los componentes de Astro (archivos `.astro`), algunas de ellas también pueden usarse en archivos `.mdx`.
 
@@ -68,6 +69,40 @@ const cmsContent = await fetchHTMLFromMyCMS();
 <Fragment set:html={cmsContent}>
 ```
 
+`set:html={Promise<string>}` inyecta una cadena HTML en un elemento que está envuelto en una Promise.
+
+Puede utilizarse para inyectar HTML almacenado externamente, como en una base de datos.
+
+```astro
+---
+import api from '../db/api.js';
+---
+<article set:html={api.getArticle(Astro.props.id)}></article>
+```
+
+`set:html={Promise<Response>}` inyecta una [Respuesta](https://developer.mozilla.org/en-US/docs/Web/API/Response) en un elemento.
+
+Esto es más útil cuando se usa `fetch()`. Por ejemplo, recuperar publicaciones antiguas de un anterior generador de sitios estáticos.
+
+```astro
+<article set:html={fetch('http://example/old-posts/making-soup.html')}></article>
+```
+
+`set:html` se puede utilizar en cualquier etiqueta y no es necesario incluir HTML. Por ejemplo, puede utilizarse con [`JSON.stringify()`](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify) en una etiqueta `<script>` para agregar un esquema [JSON-LD](https://json-ld.org/) a su página.
+
+```astro
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org/",
+  "@type": "Person",
+  name: "Houston",
+  hasOccupation: {
+    "@type": "Occupation",
+    name: "Astronaut"
+  }
+})}/>
+```
+
+
 ### `set:text`
 
 `set:text={string}` inyecta un string de texto en un elemento, similar a `el.innerText`. A diferencia de `set:html`, Astro verifica automáticamente al valor `string` que se pasa.
@@ -76,11 +111,11 @@ Esto equivale a pasar una variable a una expresión de maquetado de forma direct
 
 ## Directivas del cliente
 
-Estas directivas controlan cómo se hidratan los [componentes de framework](/es/core-concepts/framework-components/) en la página.
+Estas directivas controlan cómo se hidratan los [componentes de framework](/es/guides/framework-components/) en la página.
 
 De forma predeterminada, un componente de framework no está hidratado en el cliente. Si no se proporciona la directiva `client:*`, su HTML se representa en la página sin JavaScript.
 
-Una directiva de cliente puede ser usada solamente en un componente de framework UI que sea directamente importado en un componente `.astro`. Las directivas de hidratación no son compatibles cuando se usan [etiquetas dinámicas](/es/core-concepts/astro-syntax/#etiquetas-dinámicas) y [componentes personalizados pasados a través de la propiedad `components`](/es/guides/markdown-content/#componentes-personalizados-con-mdx-importado).
+Una directiva de cliente puede ser usada solamente en un componente de framework UI que sea directamente importado en un componente `.astro`. Las directivas de hidratación no son compatibles cuando se usan [etiquetas dinámicas](/es/reference/astro-syntax/#etiquetas-dinámicas) y [componentes personalizados pasados a través de la propiedad `components`](/es/guides/markdown-content/#componentes-personalizados-con-mdx-importado).
 
 ### `client:load`
 
@@ -153,6 +188,7 @@ Si el componente ya está oculto y se muestra mediante media queries de CSS, ent
 <SomeSvelteComponent client:only="svelte" />
 <SomeVueComponent client:only="vue" />
 <SomeSolidComponent client:only="solid-js" />
+<SomeLitComponent client:only="lit" />
 ```
 
 ### Directivas de cliente personalizadas
@@ -174,7 +210,7 @@ De forma predeterminada, Astro aplica automáticamente las reglas CSS `<style>` 
 
 Puedes combinar `<style>` y `<style is:global>` juntos en el mismo componente para crear algunas reglas de estilo globales mientras mantienes la mayor parte del CSS con un alcance local dentro del componente de Astro.
 
-📚 Consulta la página [Estilos & CSS](/es/guides/styling/#estilos-globales) para obtener más detalles sobre cómo funcionan los estilos globales.
+<ReadMore>Consulta la página [Estilos & CSS](/es/guides/styling/#estilos-globales) para obtener más detalles sobre cómo funcionan los estilos globales.</ReadMore>
 
 ```astro
 <style is:global>
@@ -213,7 +249,7 @@ La directiva `is:inline` está implícita cada vez que se usa cualquier atributo
 </script>
 ```
 
-📚 Mira cómo funcionan los [scripts del lado del cliente](/es/guides/client-side-scripts/) en los componentes de Astro.
+<ReadMore>Mira cómo funcionan los [scripts del lado del cliente](/es/guides/client-side-scripts/) en los componentes de Astro.</ReadMore>
 
 ### `define:vars`
 

@@ -2,13 +2,16 @@
 type: integration
 title: '@astrojs/solid-js'
 description: "Apprenez à utiliser l'intégration du framework @astrojs/solid-js pour étendre la prise en charge des composants dans votre projet Astro."
+sidebar:
+  label: SolidJS
 githubIntegrationURL: 'https://github.com/withastro/astro/tree/main/packages/integrations/solid/'
 category: renderer
 i18nReady: true
 ---
-import PackageManagerTabs from '~/components/tabs/PackageManagerTabs.astro'
+import PackageManagerTabs from '~/components/tabs/PackageManagerTabs.astro';
+import Since from '~/components/Since.astro';
 
-Cette **[intégration Astro][astro-integration]** permet le rendu côté serveur et l'hydratation côté client pour vos composants [SolidJS](https://www.solidjs.com/).
+Cette **[intégration Astro][astro-integration]** permet le rendu et l'hydratation côté client pour vos composants [SolidJS](https://www.solidjs.com/).
 
 ## Installation
 
@@ -48,7 +51,7 @@ Tout d'abord, installez le paquet `@astrojs/solid-js` :
   </Fragment>
   <Fragment slot="pnpm">
     ```sh
-    pnpm install @astrojs/solid-js
+    pnpm add @astrojs/solid-js
     ```
   </Fragment>
   <Fragment slot="yarn">
@@ -58,7 +61,7 @@ Tout d'abord, installez le paquet `@astrojs/solid-js` :
   </Fragment>
 </PackageManagerTabs>
 
-La plupart des gestionnaires de paquets installent également les dépendances associées. Si vous voyez un avertissement "Cannot find package 'solid-js'" (ou similaire) lorsque vous démarrez Astro, vous devez installer SolidJS :
+La plupart des gestionnaires de paquets installent également les dépendances associées. Si vous voyez un avertissement `Cannot find package 'solid-js'` (ou similaire) lorsque vous démarrez Astro, vous devez installer SolidJS :
 
 <PackageManagerTabs>
   <Fragment slot="npm">
@@ -68,7 +71,7 @@ La plupart des gestionnaires de paquets installent également les dépendances a
   </Fragment>
   <Fragment slot="pnpm">
     ```sh
-    pnpm install solid-js
+    pnpm add solid-js
     ```
   </Fragment>
   <Fragment slot="yarn">
@@ -80,14 +83,28 @@ La plupart des gestionnaires de paquets installent également les dépendances a
 
 Ensuite, appliquez l'intégration à votre fichier `astro.config.*` en utilisant la propriété `integrations` :
 
-```js title="astro.config.mjs" ins={2} ins="solid()"
+```js title="astro.config.mjs" ins={2} ins="solidJs()"
 import { defineConfig } from 'astro/config';
-import solid from '@astrojs/solid-js';
+import solidJs from '@astrojs/solid-js';
 
 export default defineConfig({
   // ...
-  integrations: [solid()],
+  integrations: [solidJs()],
 });
+```
+
+Et ajoutez le code suivant au fichier `tsconfig.json`.
+
+```json title="tsconfig.json" ins={5-8}
+{
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist"],
+  "compilerOptions": {
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js"
+  }
+}
 ```
 
 ## Démarrage
@@ -97,6 +114,42 @@ Pour utiliser votre premier composant SolidJS dans Astro, consultez notre [docum
 * 📦 comment les composants du framework sont chargés,
 * 💧 les options d'hydratation côté client, et
 * 🤝 les possibilités de mélanger et d'imbriquer les Frameworks.
+
+## Configuration
+
+### devtools
+
+<p><Since pkg="@astrojs/solid-js" v="4.2.0" /></p>
+
+Vous pouvez activer [Solid DevTools](https://github.com/thetarnav/solid-devtools) durant le développement en passant un objet avec `devtools : true` à votre configuration d'intégration `solid()` et en ajoutant `solid-devtools` aux dépendances de votre projet :
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```sh
+    npm install solid-devtools
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```sh
+    pnpm add solid-devtools
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```sh
+    yarn add solid-devtools
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+```js title="astro.config.mjs"
+import { defineConfig } from 'astro/config';
+import solid from '@astrojs/solid-js';
+
+export default defineConfig({
+  // ...
+  integrations: [solid({ devtools: true })],
+});
+```
 
 ## Options
 
@@ -127,7 +180,7 @@ export default defineConfig({
       include: ['**/react/*'],
     }),
     solid({
-      include: ['**/solid/*', '**/node_modules/@suid/material/**],
+      include: ['**/solid/*', '**/node_modules/@suid/material/**'],
     }),
   ],
 });
@@ -135,7 +188,7 @@ export default defineConfig({
 
 ## Utilisation
 
-Utilisez un composant SolidJS comme vous le feriez avec n'importe quel [composant UI framework](/fr/core-concepts/framework-components/).
+Utilisez un composant SolidJS comme vous le feriez avec n'importe quel [composant UI framework](/fr/guides/framework-components/).
 
 ### Limites de Suspense
 
@@ -170,7 +223,7 @@ N'hésitez pas à ajouter d'autres limites de Suspense selon vos préférences.
 
 [astro-integration]: /fr/guides/integrations-guide/
 
-[astro-ui-frameworks]: /fr/core-concepts/framework-components/#utilisation-des-composants-de-framework
+[astro-ui-frameworks]: /fr/guides/framework-components/#utilisation-des-composants-de-framework
 
 [astro-client-only]: /fr/reference/directives-reference/#clientonly
 

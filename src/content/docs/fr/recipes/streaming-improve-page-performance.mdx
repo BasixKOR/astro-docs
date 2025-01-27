@@ -52,7 +52,7 @@ const factData = await factResponse.json();
 ```
 
 
-La page Astro ci-dessous utilisant ces composants peut rendre des parties de la page plus rapidement. Les balises `<head>`, `<body>` et `<h1>` ne sont plus bloquées par les recherches de données. Le serveur récupère alors les données pour `RandomName` et `RandomFact` en parallèle et transmet le code HTML résultant au navigateur.
+La page Astro ci-dessous utilisant ces composants peut rendre des parties de la page plus rapidement. Les balises `<head>`, `<body>` et `<h2>` ne sont plus bloquées par les recherches de données. Le serveur récupère alors les données pour `RandomName` et `RandomFact` en parallèle et transmet le code HTML résultant au navigateur.
 
 ```astro title="src/pages/index.astro"
 ---
@@ -80,7 +80,7 @@ Vous pouvez également inclure des promesses directement dans le modèle. Au lie
 ---
 const personPromise = fetch('https://randomuser.me/api/')
   .then(response => response.json())
-  .then(arr => arr[0].name.first);
+  .then(personData => personData.results[0].name.first);
 const factPromise = fetch('https://catfact.ninja/fact')
   .then(response => response.json())
   .then(factData => factData.fact);

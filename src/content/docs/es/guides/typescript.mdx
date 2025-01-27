@@ -5,8 +5,9 @@ i18nReady: true
 ---
 import Since from '~/components/Since.astro'
 import PackageManagerTabs from '~/components/tabs/PackageManagerTabs.astro'
+import ReadMore from '~/components/ReadMore.astro'
 
-Astro tiene compatibilidad integrada con [TypeScript](https://www.typescriptlang.org/). Puedes importar archivos `.ts` y `.tsx` en tu proyecto de Astro, escribir código TypeScript directamente dentro del [componente de Astro](/es/core-concepts/astro-components/#script-de-un-componente), e incluso utilizar un archivo de configuración [`astro.config.ts`](/es/guides/configuring-astro/#archivo-de-configuración-de-astro)  si así lo deseas.
+Astro tiene compatibilidad integrada con [TypeScript](https://www.typescriptlang.org/). Puedes importar archivos `.ts` y `.tsx` en tu proyecto de Astro, escribir código TypeScript directamente dentro del [componente de Astro](/es/basics/astro-components/#script-de-un-componente), e incluso utilizar un archivo de configuración [`astro.config.ts`](/es/guides/configuring-astro/#archivo-de-configuración-de-astro)  si así lo deseas.
 
 Usando TypeScript, puedes prevenir errores en tiempo de ejecución al definir las formas de los objetos y componentes en tu código. Por ejemplo, si utilizas TypeScript para [tipar las props de tu componente](#props-de-componentes), obtendrás un error en tu editor si estableces una prop que tu componente no acepta.
 
@@ -28,7 +29,7 @@ Para heredar una de las plantillas, usa [la opción `extends`](https://www.types
 }
 ```
 
-Adicionalmente, nuestras plantillas incluyen un archivo `env.d.ts` dentro de la carpeta `src` para proveer [tipos del cliente de Vite](https://vitejs.dev/guide/features.html#client-types) en tu proyecto:
+Adicionalmente, nuestras plantillas incluyen un archivo `env.d.ts` dentro de la carpeta `src` para proveer [tipos del cliente de Vite](https://vite.dev/guide/features.html#client-types) en tu proyecto:
 
 ```typescript title="env.d.ts"
 /// <reference types="astro/client" />
@@ -70,7 +71,7 @@ Para comprobar que el plugin está funcionando, crea un archivo `.ts` e importa 
 
 ### Componentes de Frameworks
 
-Si tu proyecto utiliza [componentes de otros framework](/es/core-concepts/framework-components/), es posible que se necesiten configuraciones adicionales dependiendo el framework utilizado. Por favor revisa la documentación de TypeScript de tu framework para más información. ([Vue](https://vuejs.org/guide/typescript/overview.html#using-vue-with-typescript), [React](https://react-typescript-cheatsheet.netlify.app/docs/basic/setup), [Preact](https://preactjs.com/guide/v10/typescript), [Solid](https://www.solidjs.com/guides/typescript))
+Si tu proyecto utiliza [componentes de otros framework](/es/guides/framework-components/), es posible que se necesiten configuraciones adicionales dependiendo el framework utilizado. Por favor revisa la documentación de TypeScript de tu framework para más información. ([Vue](https://vuejs.org/guide/typescript/overview.html#using-vue-with-typescript), [React](https://react-typescript-cheatsheet.netlify.app/docs/basic/setup), [Preact](https://preactjs.com/guide/v10/typescript), [Solid](https://www.solidjs.com/guides/typescript))
 
 ## Importación de tipos
 
@@ -82,7 +83,7 @@ import type { SomeType } from './script';
 ```
 Esto te ayudará a evitar casos extremos en los que el empaquetador de Astro intente empaquetar incorrectamente sus tipos importados como si fueran JavaScript.
 
-Puedes configurar TypeScript para que obligue a realizar importaciones de tipos en tu archivo `.tsconfig`. Configura [`verbatimModuleSyntax`](https://www.typescriptlang.org/tsconfig#verbatimModuleSyntax) a `true`. TypeScript verificará tus importaciones y te dirá cuando debes usar `import type`. Esta configuración está habilitada por defecto en todos nuestros presets.
+Puedes configurar TypeScript para que obligue a realizar importaciones de tipos en tu archivo `tsconfig.json`. Configura [`verbatimModuleSyntax`](https://www.typescriptlang.org/tsconfig#verbatimModuleSyntax) a `true`. TypeScript verificará tus importaciones y te dirá cuando debes usar `import type`. Esta configuración está habilitada por defecto en todos nuestros presets.
 
 ```json title="tsconfig.json" ins={3}
   {
@@ -94,8 +95,7 @@ Puedes configurar TypeScript para que obligue a realizar importaciones de tipos 
 
 ## Alias de importación
 
-Astro es compatible con [alias de importación](/es/guides/aliases/) definidos en la configuración `tsconfig.json` o `jsconfig.json` usando `paths`. [Lee nuestra guía](/es/guides/aliases/) para saber más.
-
+Astro es compatible con [alias de importación](/es/guides/imports/#alias) definidos en la configuración `tsconfig.json` o `jsconfig.json` usando `paths`.
 
 ```astro title="src/pages/about/nate.astro" "@components" "@layouts"
 ---
@@ -169,7 +169,7 @@ Por ejemplo, si estuvieras construyendo un componente `<Link>`, podrías hacer l
 
 ```astro title="src/components/Link.astro" ins="HTMLAttributes" ins="HTMLAttributes<'a'>"
 ---
-import type { HTMLAttributes } from 'astro/types'
+import type { HTMLAttributes } from 'astro/types';
 // usa un `type`
 type Props = HTMLAttributes<'a'>;
 // o extiendelo con una `interface`
@@ -193,6 +193,11 @@ declare namespace astroHTML.JSX {
     'data-count'?: number;
     'data-label'?: string;
   }
+
+  // Añade una propiedad personalizada de CSS al objeto de estilo.
+  interface CSSProperties {
+    '--theme-color'?: 'black' | 'white';
+  }
 }
 ```
 
@@ -206,6 +211,24 @@ type MyAttributes = astroHTML.JSX.ImgHTMLAttributes;
 ```
 :::
 
+### Tipo `ComponentProps`
+
+<p><Since v="4.3.0" /></p>
+
+Esta exportación de tipos te permite hacer referencia a las `Props` aceptadas por otro componente, incluso si ese componente no exporta ese tipo de `Props` directamente.
+
+El siguiente ejemplo muestra el uso de la utilidad `ComponentProps` de `astro/types` para referenciar los tipos `Props` de un componente `<Button />`:
+
+```astro title="src/pages/index.astro"
+---
+import type { ComponentProps } from 'astro/types';
+
+import Button from "./Button.astro";
+
+type ButtonProps = ComponentProps<typeof Button>;
+---
+```
+
 ### Tipo polimórfico
 
 <p><Since v="2.5.0" /></p>
@@ -216,7 +239,7 @@ El ejemplo a continuación implementa un componente completamente tipado y polim
 
 ```astro
 ---
-import { HTMLTag, Polymorphic } from 'astro/types';
+import type { HTMLTag, Polymorphic } from 'astro/types';
 type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }>;
 const { as: Tag, ...props } = Astro.props;
 ---
@@ -233,7 +256,7 @@ Puedes obtener el tipo de [`Astro.params`](/es/reference/api-reference/#astropar
 
 ```astro title="src/pages/posts/[...slug].astro" {2,14-15}
 ---
-import { InferGetStaticParamsType, InferGetStaticPropsType, GetStaticPaths  } from 'astro';
+import type { InferGetStaticParamsType, InferGetStaticPropsType, GetStaticPaths } from 'astro';
 
 export const getStaticPaths = (async () => {
   const posts = await getCollection('blog');
@@ -270,9 +293,9 @@ Para ver errores de tipos en tu editor, asegúrate de tener instalada la [extens
 `astro check` verifica todos los archivos incluidos en tu proyecto TypeScript. Para chequeo de tipos dentro de archivos de Svelte y Vue, puedes usar los paquetes [`svelte-check`](https://www.npmjs.com/package/svelte-check) y [`vue-tsc`](https://www.npmjs.com/package/vue-tsc) respectivamente.
 :::
 
-📚 Lee más sobre las [importaciones de archivos `.ts`](/es/guides/imports/#typescript) en Astro.
+<ReadMore>Lee más sobre las [importaciones de archivos `.ts`](/es/guides/imports/#typescript) en Astro.</ReadMore>
 
-📚 Lee más sobre la [configuración de TypeScript](https://www.typescriptlang.org/tsconfig/).
+<ReadMore>Lee más sobre la [configuración de TypeScript](https://www.typescriptlang.org/tsconfig/).</ReadMore>
 
 ## Solución de problemas
 
